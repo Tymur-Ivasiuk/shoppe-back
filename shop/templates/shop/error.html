@@ -1,0 +1,48 @@
+{% extends 'shop/base.html' %}
+
+{% block menu_i %}
+<div class="header-menu">
+    <div class="header-menu-items">
+        <a href="#!" class="header-menu-link-text flicking">
+            Shop
+        </a>
+        <a href="#!" class="header-menu-link-text">
+            Blog
+        </a>
+        <a href="#!" class="header-menu-link-text">
+            Our Story
+        </a>
+    </div>
+    |
+    <div class="header-menu-items">
+        <a href="#!" class="header-menu-link-icon">
+            <img src="{% static 'shop/images/svg/header/icon-search.svg' %}" alt="search">
+        </a>
+        <a href="#!" class="header-menu-link-icon">
+            <img src="{% static 'shop/images/svg/header/icon-shopping.svg' %}" alt="shopping">
+        </a>
+        <a href="#!" class="header-menu-link-icon">
+            <img src="{% static 'shop/images/svg/header/icon-user.svg' %}" alt="user">
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block main %}
+<main class="main">
+    <div class="error">
+        <h2 class="error-title">
+            404 ERROR
+        </h2>
+        <p class="error-text">
+            This page not found;
+            back to home and start again
+        </p>
+        <a href="{% url 'home' %}" class="error-link">
+            <div class="error-link-button">
+                HOMEPAGE
+            </div>
+        </a>
+    </div>
+</main>
+{% endblock %}

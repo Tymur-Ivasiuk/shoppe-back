@@ -1,0 +1,77 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale=1.0">
+
+    <title>{{ title }}</title>
+    <link type="text/css" href="{% static 'shop/css/styles.css' %}" rel="stylesheet">
+    <link type="text/css" href="{% static 'shop/css/product_styles.css' %}" rel="stylesheet">
+
+    {% block js_head %}
+    {% endblock %}
+</head>
+<body>
+    <div class="wrapper">
+        <!-- header start -->
+        {% block header %}
+        {% endblock %}
+
+
+        {% block main %}
+        {% endblock %}
+
+        <footer class="footer">
+            <div class="footer-border">
+                <div class="footer-wrap">
+                    <div class="footer-menu">
+                        <a href="#!" class="footer-menu-words">
+                            CONTACT
+                        </a>
+                        <a href="#!" class="footer-menu-words">
+                            TERMS OF SERVICES
+                        </a>
+                        <a href="#!" class="footer-menu-words">
+                            SHIPPING AND RETURNS
+                        </a>
+                    </div>
+                    <form class="footer-form">
+                        <fieldset>
+                            <p class="footer-form-info">
+                                <input name="user-email" type="text" class="footer-form-field" placeholder="Give an email, get the newsletter.">
+                                <button class="footer-form-submit">
+                                    <img src="{% static 'shop/images/svg/footer/shape-form.svg' %}" alt="submit">
+                                </button>
+                            </p>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="footer-wrap">
+                    <p class="footer-privacy">
+                        © 2021 Shelly. Terms of use and privacy policy.
+                    </p>
+                    <div class="footer-link">
+                        <a href="#!" class="footer-link-icon">
+                            <img src="{% static 'shop/images/svg/footer/linked-in-icon.svg' %}" alt="LinkedIn">
+                        </a>
+                        <a href="#!" class="footer-link-icon">
+                            <img src="{% static 'shop/images/svg/footer/facebook-icon.svg' %}" alt="Facebook">
+                        </a>
+                        <a href="#!" class="footer-link-icon">
+                            <img src="{% static 'shop/images/svg/footer/instagram-icon.svg' %}" alt="Instagram">
+                        </a>
+                        <a href="#!" class="footer-link-icon">
+                            <img src="{% static 'shop/images/svg/footer/twitter-icon.svg' %}" alt="Twitter">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    {% block js_scripts %}
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,314 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block js_head %}
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+{% endblock %}
+
+{% block header %}
+<header class="header">
+    <div class="header-wrapper header-border">
+        <div class="header-logo">
+            <a href="{% url 'home' %}" class="header-logo-link">
+                <h1 class="header-logo-link-title">
+                    SHOPPE
+                </h1>
+            </a>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-items">
+                <a href="{% url 'all_products' %}" class="header-menu-link-text flicking">
+                    Shop
+                </a>
+                <a href="#!" class="header-menu-link-text">
+                    Blog
+                </a>
+                <a href="#!" class="header-menu-link-text">
+                    Our Story
+                </a>
+            </div>
+            |
+            <div class="header-menu-items">
+                <a href="#!" class="header-menu-link-icon">
+                    <img src="{% static 'shop/images/svg/header/icon-search.svg' %}" alt="search">
+                </a>
+                <a href="#!" class="header-menu-link-icon">
+                    <img src="{% static 'shop/images/svg/header/icon-shopping.svg' %}" alt="shopping">
+                </a>
+                <a href="#!" class="header-menu-link-icon">
+                    <img src="{% static 'shop/images/svg/header/icon-user.svg' %}" alt="user">
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock header %}
+
+{% block main %}
+<main class="main">
+    <section class="messages">
+        <div class="added-cart message" id="yes-msg">
+            <div class="first-added">
+                <img src="{% static 'shop/images/svg/main/messages/yes-icon.svg' %}" alt="yes" class="added-icon-message">
+                <p class="added-cart-message-text">
+                    The item added to your Shopping bag.
+                </p>
+            </div>
+            <a href="#!" class="view-cart-link">
+                VIEW CART
+            </a>
+        </div>
+    </section>
+    <section class="product">
+        <div class="product-images">
+            <div class="nav-container">
+                <div class="slider-nav product-images-slider-nav">
+                    {% for i in photos %}
+                        <div class="product-image-small-wrap">
+                            <img src="{{ i.image.url }}" alt="image" class="product-image-small">
+                        </div>
+                    {% endfor %}
+                </div>
+              </div>
+              <div class="main-container">
+                <div class="slider slider-main product-image-slider">
+                    {% for i in photos %}
+                        <div class="product-image-big-wrap">
+                            <img src="{{ i.image.url }}" alt="image" class="product-image-big">
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="product-info">
+            <h2 class="product-info_title">
+                {{ product.title }}
+            </h2>
+
+            <p class="product-info_price">
+                ₴ {{ product.price }}
+            </p>
+
+            <div class="product-info_rate">
+                <div class="product-info_rate-stars">
+                    <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
+                    <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
+                    <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
+                    <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
+                    <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
+                </div>
+                <p class="product-info_rate-rewiews">
+                    1 customer review
+                </p>
+            </div>
+
+            <p class="product-info_short-desc">
+                {{ product.description|truncatechars:225 }}
+            </p>
+
+            <div class="product-info_order">
+                <div class="product-info_order-amount">
+                    <input type="button" value="-" id="button_minus" class="disabled">
+                    <input type="number" step="1" min="1" max="{{ product.quantity }}" id="num_count" name="quantity" value="1" title="Qty" readonly="true">
+                    {% if product.quantity <= 1 %}
+                        <input type="button" value="+" id="button_plus" class="disabled">
+                    {% else %}
+                        <input type="button" value="+" id="button_plus">
+                    {% endif %}
+                </div>
+                <div class="product-info_order-button-cart">
+                    <button class="product-info_order-button-cart-text" id="add">
+                        ADD TO CART
+                    </button>
+                </div>
+            </div>
+
+            <div class="product-info_buttons">
+                <button class="product-info_buttons-like" id="button_like">
+                    <img src="{% static 'shop/images/svg/main/product_icons/like-off-icon.svg' %}" alt="like-off" class="like-icon active" id="like_icon-off">
+                    <img src="{% static 'shop/images/svg/main/product_icons/like-on-icon.svg' %}" alt="like-on" class="like-icon" id="like_icon-on">
+                </button>
+
+                <div class="product-info_buttons-links">
+                    <a href="#!" class="product-info_buttons-link">
+                        <img src="{% static 'shop/images/svg/footer/facebook-icon.svg' %}" alt="Facebook" class="product-info_buttons-link-pic">
+                    </a>
+                    <a href="#!" class="product-info_buttons-link">
+                        <img src="{% static 'shop/images/svg/footer/instagram-icon.svg' %}" alt="Instagram" class="product-info_buttons-link-pic">
+                    </a>
+                    <a href="#!" class="product-info_buttons-link">
+                        <img src="{% static 'shop/images/svg/footer/twitter-icon.svg' %}" alt="Twitter" class="product-info_buttons-link-pic">
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-info_sku">
+                <span class="product-info_sku-text">
+                    SKU:
+                </span>
+                <span class="product-info_sku-article">
+                    {{ product.sku }}
+                </span>
+            </div>
+
+            <div class="product-info_categories">
+                <span class="product-info_categories-text">
+                    Categories:
+                </span>
+                <span class="product-info_categories-selected">
+                    {{ product.category_id.name }}
+                </span>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="tabs">
+        <!-- Tab links -->
+        <div class="tab">
+            <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'Description')">Description</button>
+            <button class="tablinks" onclick="openCity(event, 'Aditional information')">Aditional information</button>
+            <button class="tablinks" onclick="openCity(event, 'Reviews')">Reviews</button>
+        </div>
+
+        <!-- Tab content -->
+        <div id="Description" class="tabcontent">
+            <p>{{ product.description }}</p>
+        </div>
+
+        <div id="Aditional information" class="tabcontent">
+            {% for i in product.attributevalues_set.all %}
+                <p class="parametr">{{ i.attribute_id }}:<span class="f-span">{{ i.value_text }}</span></p>
+            {% endfor %}
+        </div>
+
+        <div id="Reviews" class="tabcontent">
+            <div class="reviews-wrap">
+                <div class="reviews-comment">
+                    <h2 class="reviews-comment-title">
+                        2 Reviews for lira earings
+                    </h2>
+                    <div class="comments">
+                        <div class="comment">
+                            <div class="comment-info">
+                                <p class="comment-info_username">
+                                    Scarlet withch
+                                </p>
+                                <p class="comment-info_date">
+                                    6 May, 2020
+                                </p>
+                            </div>
+                            <div class="comment-stars">
+                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                            </div>
+                            <div class="comment-text">
+                                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat.
+                            </div>
+                        </div>
+                        <div class="comment">
+                            <div class="comment-info">
+                                <p class="comment-info_username">
+                                    Scarlet withch
+                                </p>
+                                <p class="comment-info_date">
+                                    6 May, 2020
+                                </p>
+                            </div>
+                            <div class="comment-stars">
+                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                            </div>
+                            <div class="comment-text">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, explicabo.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="reviews-form">
+                    <h2 class="reviews-form-title">
+                        Add a Review
+                    </h2>
+                    <p class="form-desc">
+                        Your email address will not be published. Required fields are marked *
+                    </p>
+                    <form>
+                        <textarea name="your-review" id="review" class="review-text form-input" placeholder="Your Review*" required></textarea>
+                        <input type="text" class="name-input form-input" placeholder="Enter your name*" required>
+                        <input type="email" class="email-input form-input" placeholder="Enter your Email*" required>
+                        <div class="checbox-info">
+                            <input type="checkbox" class="save-info-input">
+                            <label class="checkbox-desc">Save my name, email, and website in this browser for the next time I comment</label>
+                        </div>
+                        <p class="form-text-stars">Your Rating*</p>
+
+                        <div class="rating">
+                            <input name="stars" id="5" type="radio"><label for="5"></label>
+                            <input name="stars" id="4" type="radio"><label for="4"></label>
+                            <input name="stars" id="3" type="radio"><label for="3"></label>
+                            <input name="stars" id="2" type="radio"><label for="2"></label>
+                            <input name="stars" id="1" type="radio"><label for="1"></label>
+                        </div>
+
+                        <input type="submit" class="submit-input" value="Submit">
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+    <section class="similar-items">
+        <h2 class="similar-title">
+            Similar Items
+        </h2>
+        <div class="table-items">
+            <div class="table-item">
+                <div class="table-item-card">
+                    <a href="#!" class="table-item-link">
+                        <img src="./img/jpg/home-items/Img 01.jpg" alt="1" class="table-item-pic">
+                    </a>
+                    <div class="table-item-icons">
+                        <button class="table-item-icon" name="cart">
+                            <img src="./img/svg/main/table icons/cart-icon.svg" alt="cart">
+                        </button>
+                        <button class="table-item-icon" name="visible">
+                            <img src="./img/svg/main/table icons/eye-icon.svg" alt="eye">
+                        </button>
+                        <button class="table-item-icon" name="like">
+                            <img src="./img/svg/main/table icons/like-icon.svg" alt="like">
+                        </button>
+                    </div>
+                </div>
+                <a href="#!" class="table-item-link">
+                    <p class="table-item-name">
+                        Lira Earrings
+                    </p>
+                </a>
+                <p class="table-item-price">
+                    $ 20,00
+                </p>
+            </div>
+
+    </section>
+</main>
+{% endblock main %}
+
+{% block js_scripts %}
+<script src="{% static 'shop/js/quantity_product.js' %}"></script>
+<script src="{% static 'shop/js/like.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="{% static 'shop/js/slick.min.js' %}"></script>
+<script src="{% static 'shop/js/sliderProduct.js' %}"></script>
+<script src="{% static 'shop/js/tabs.js' %}"></script>
+<script src="{% static 'shop/js/messageAddCart.js' %}./"></script>
+<script src="{% static 'shop/js/fontAwesome.js' %}./"></script>
+{% endblock %}
