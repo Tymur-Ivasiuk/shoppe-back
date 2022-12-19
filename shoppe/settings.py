@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'shop.apps.ShopConfig',
     'adminsortable2',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

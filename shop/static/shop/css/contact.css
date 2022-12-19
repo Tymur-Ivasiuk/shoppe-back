@@ -1,0 +1,138 @@
+.contact {
+    margin: 125px auto 39px auto;
+    max-width: 908px;
+}
+
+.contact-title {
+    text-align: center;
+    font-weight: 500;
+    font-size: 33px;
+    line-height: 43px;
+    color: #000000;
+
+    margin-bottom: 39px;
+}
+.contact-desc {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 26px;
+    margin: 0 auto 108px auto;
+    text-align: center;
+    max-width: 561px;
+    color: #000000;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+}
+.contact-form_wrap-small {
+    display: flex;
+    flex-direction: column;
+}
+.contact-form_block {
+    width: 100%;
+    display: flex;
+    gap: 116px;
+    justify-content: space-between;
+}
+.contact-form_text {
+    width: 100%;
+
+    margin-bottom: 94px;
+
+    background: transparent;
+    border: 0;
+    padding: 12px 0;
+
+    font-family: inherit;
+    font-size: inherit;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 27px;
+
+    border-bottom: 1px solid #D8D8D8;;
+}
+
+
+
+.select {
+    width: 100%;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    position: relative;
+}
+
+.select_header {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    background-color: #fff;
+    border: 0;
+    border-bottom: 1px solid #D8D8D8;
+    padding: 12px 0;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+.select_current {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 27px;
+}
+.select_header::after {
+    position: absolute;
+    content: url(../img/svg/select-icon.svg);
+    right: 15px;
+}
+
+
+.select_list {
+    display: none;
+
+    position: absolute;
+    width: 100%;
+    margin: 5px 0;
+    padding: 0;
+    list-style-type: none;
+    background: rgb(255, 255, 255);
+    z-index: 1;
+    border: 1px solid #D8D8D8;
+    border-radius: 4px;
+}
+.is-active {
+    display: block;
+}
+
+.select_item {
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    padding: 10px 15px;
+    transition: .2s ease;
+}
+.select_item:hover {
+    background: #ccc;
+}
+.select_input-hidden {
+    display: none;
+}
+
+
+.contact-form_submit {
+    width: 55%;
+    margin: 0 auto;
+    padding: 16px 0;
+    border: 0;
+    border: 2px solid #000;
+    transition: .4s ease;
+    background: #000;
+    color: #fff;
+}
+.contact-form_submit:hover, .contact-form_submit:focus, .contact-form_submit:active {
+    background: #fff;
+    color: #000;
+}

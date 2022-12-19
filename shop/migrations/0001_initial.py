@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
             name='Photo',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(upload_to='images/%Y/%m/%d')),
+                ('image', models.ImageField(upload_to='img/%Y/%m/%d')),
                 ('index', models.PositiveSmallIntegerField()),
                 ('product_id', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='shop.product')),
             ],

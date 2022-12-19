@@ -7,8 +7,8 @@
     <meta name="viewport" content="width-device-width, initial-scale=1.0">
 
     <title>{{ title }}</title>
-    <link type="text/css" href="{% static 'shop/css/styles.css' %}" rel="stylesheet">
-    <link type="text/css" href="{% static 'shop/css/product_styles.css' %}" rel="stylesheet">
+    {% block css_styles %}
+    {% endblock %}
 
     {% block js_head %}
     {% endblock %}
@@ -42,7 +42,7 @@
                             <p class="footer-form-info">
                                 <input name="user-email" type="text" class="footer-form-field" placeholder="Give an email, get the newsletter.">
                                 <button class="footer-form-submit">
-                                    <img src="{% static 'shop/images/svg/footer/shape-form.svg' %}" alt="submit">
+                                    <img src="{% static 'shop/img/svg/footer/shape-form.svg' %}" alt="submit">
                                 </button>
                             </p>
                         </fieldset>
@@ -54,16 +54,16 @@
                     </p>
                     <div class="footer-link">
                         <a href="#!" class="footer-link-icon">
-                            <img src="{% static 'shop/images/svg/footer/linked-in-icon.svg' %}" alt="LinkedIn">
+                            <img src="{% static 'shop/img/svg/footer/linked-in-icon.svg' %}" alt="LinkedIn">
                         </a>
                         <a href="#!" class="footer-link-icon">
-                            <img src="{% static 'shop/images/svg/footer/facebook-icon.svg' %}" alt="Facebook">
+                            <img src="{% static 'shop/img/svg/footer/facebook-icon.svg' %}" alt="Facebook">
                         </a>
                         <a href="#!" class="footer-link-icon">
-                            <img src="{% static 'shop/images/svg/footer/instagram-icon.svg' %}" alt="Instagram">
+                            <img src="{% static 'shop/img/svg/footer/instagram-icon.svg' %}" alt="Instagram">
                         </a>
                         <a href="#!" class="footer-link-icon">
-                            <img src="{% static 'shop/images/svg/footer/twitter-icon.svg' %}" alt="Twitter">
+                            <img src="{% static 'shop/img/svg/footer/twitter-icon.svg' %}" alt="Twitter">
                         </a>
                     </div>
                 </div>

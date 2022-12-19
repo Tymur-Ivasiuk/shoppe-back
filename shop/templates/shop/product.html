@@ -1,6 +1,11 @@
 {% extends 'shop/base.html' %}
 {% load static %}
 
+{% block css_styles %}
+<link type="text/css" href="{% static 'shop/css/styles.css' %}" rel="stylesheet">
+<link type="text/css" href="{% static 'shop/css/product_styles.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block js_head %}
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
@@ -31,13 +36,13 @@
             |
             <div class="header-menu-items">
                 <a href="#!" class="header-menu-link-icon">
-                    <img src="{% static 'shop/images/svg/header/icon-search.svg' %}" alt="search">
+                    <img src="{% static 'shop/img/svg/header/icon-search.svg' %}" alt="search">
                 </a>
                 <a href="#!" class="header-menu-link-icon">
-                    <img src="{% static 'shop/images/svg/header/icon-shopping.svg' %}" alt="shopping">
+                    <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
                 </a>
                 <a href="#!" class="header-menu-link-icon">
-                    <img src="{% static 'shop/images/svg/header/icon-user.svg' %}" alt="user">
+                    <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
                 </a>
             </div>
         </div>
@@ -50,7 +55,7 @@
     <section class="messages">
         <div class="added-cart message" id="yes-msg">
             <div class="first-added">
-                <img src="{% static 'shop/images/svg/main/messages/yes-icon.svg' %}" alt="yes" class="added-icon-message">
+                <img src="{% static 'shop/img/svg/main/messages/yes-icon.svg' %}" alt="yes" class="added-icon-message">
                 <p class="added-cart-message-text">
                     The item added to your Shopping bag.
                 </p>
@@ -64,20 +69,32 @@
         <div class="product-images">
             <div class="nav-container">
                 <div class="slider-nav product-images-slider-nav">
-                    {% for i in photos %}
+                    {% if photos %}
+                        {% for i in photos %}
+                            <div class="product-image-small-wrap">
+                                <img src="{{ i.image.url }}" alt="image" class="product-image-small">
+                            </div>
+                        {% endfor %}
+                    {% else %}
                         <div class="product-image-small-wrap">
-                            <img src="{{ i.image.url }}" alt="image" class="product-image-small">
+                            <img src="{% static 'shop/img/jpg/nothing-image.jpg' %}" alt="image" class="product-image-small">
                         </div>
-                    {% endfor %}
+                    {% endif %}
                 </div>
-              </div>
-              <div class="main-container">
+            </div>
+            <div class="main-container">
                 <div class="slider slider-main product-image-slider">
-                    {% for i in photos %}
+                    {% if photos %}
+                        {% for i in photos %}
+                            <div class="product-image-big-wrap">
+                                <img src="{{ i.image.url }}" alt="image" class="product-image-big">
+                            </div>
+                        {% endfor %}
+                    {% else %}
                         <div class="product-image-big-wrap">
-                            <img src="{{ i.image.url }}" alt="image" class="product-image-big">
+                            <img src="{% static 'shop/img/jpg/nothing-image.jpg' %}" alt="image" class="product-image-big">
                         </div>
-                    {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -92,11 +109,11 @@
 
             <div class="product-info_rate">
                 <div class="product-info_rate-stars">
-                    <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
-                    <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
-                    <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
-                    <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
-                    <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
+                    <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
+                    <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
+                    <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
+                    <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
+                    <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
                 </div>
                 <p class="product-info_rate-rewiews">
                     1 customer review
@@ -126,19 +143,19 @@
 
             <div class="product-info_buttons">
                 <button class="product-info_buttons-like" id="button_like">
-                    <img src="{% static 'shop/images/svg/main/product_icons/like-off-icon.svg' %}" alt="like-off" class="like-icon active" id="like_icon-off">
-                    <img src="{% static 'shop/images/svg/main/product_icons/like-on-icon.svg' %}" alt="like-on" class="like-icon" id="like_icon-on">
+                    <img src="{% static 'shop/img/svg/main/product_icons/like-off-icon.svg' %}" alt="like-off" class="like-icon active" id="like_icon-off">
+                    <img src="{% static 'shop/img/svg/main/product_icons/like-on-icon.svg' %}" alt="like-on" class="like-icon" id="like_icon-on">
                 </button>
 
                 <div class="product-info_buttons-links">
                     <a href="#!" class="product-info_buttons-link">
-                        <img src="{% static 'shop/images/svg/footer/facebook-icon.svg' %}" alt="Facebook" class="product-info_buttons-link-pic">
+                        <img src="{% static 'shop/img/svg/footer/facebook-icon.svg' %}" alt="Facebook" class="product-info_buttons-link-pic">
                     </a>
                     <a href="#!" class="product-info_buttons-link">
-                        <img src="{% static 'shop/images/svg/footer/instagram-icon.svg' %}" alt="Instagram" class="product-info_buttons-link-pic">
+                        <img src="{% static 'shop/img/svg/footer/instagram-icon.svg' %}" alt="Instagram" class="product-info_buttons-link-pic">
                     </a>
                     <a href="#!" class="product-info_buttons-link">
-                        <img src="{% static 'shop/images/svg/footer/twitter-icon.svg' %}" alt="Twitter" class="product-info_buttons-link-pic">
+                        <img src="{% static 'shop/img/svg/footer/twitter-icon.svg' %}" alt="Twitter" class="product-info_buttons-link-pic">
                     </a>
                 </div>
             </div>
@@ -200,11 +217,11 @@
                                 </p>
                             </div>
                             <div class="comment-stars">
-                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
                             </div>
                             <div class="comment-text">
                                 Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat.
@@ -220,11 +237,11 @@
                                 </p>
                             </div>
                             <div class="comment-stars">
-                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                                <img src="{% static 'shop/images/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
                             </div>
                             <div class="comment-text">
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, explicabo.

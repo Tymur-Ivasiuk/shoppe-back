@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='photo',
             name='image',
-            field=models.ImageField(upload_to='images/<django.db.models.fields.related.ForeignKey>'),
+            field=models.ImageField(upload_to='img/<django.db.models.fields.related.ForeignKey>'),
         ),
         migrations.AlterField(
             model_name='product',

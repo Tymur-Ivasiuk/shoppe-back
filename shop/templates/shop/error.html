@@ -1,31 +1,47 @@
 {% extends 'shop/base.html' %}
 
+{% block css_styles %}
+<link type="text/css" href="{% static 'shop/css/styles.css' %}" rel="stylesheet">
+<link type="text/css" href="{% static 'shop/css/product_styles.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block menu_i %}
-<div class="header-menu">
-    <div class="header-menu-items">
-        <a href="#!" class="header-menu-link-text flicking">
-            Shop
-        </a>
-        <a href="#!" class="header-menu-link-text">
-            Blog
-        </a>
-        <a href="#!" class="header-menu-link-text">
-            Our Story
-        </a>
+<header class="header">
+    <div class="header-wrapper header-border">
+        <div class="header-logo">
+            <a href="{% url 'home' %}" class="header-logo-link">
+                <h1 class="header-logo-link-title">
+                    SHOPPE
+                </h1>
+            </a>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-items">
+                <a href="{% url 'all_products' %}" class="header-menu-link-text flicking">
+                    Shop
+                </a>
+                <a href="#!" class="header-menu-link-text">
+                    Blog
+                </a>
+                <a href="#!" class="header-menu-link-text">
+                    Our Story
+                </a>
+            </div>
+            |
+            <div class="header-menu-items">
+                <a href="#!" class="header-menu-link-icon">
+                    <img src="{% static 'shop/img/svg/header/icon-search.svg' %}" alt="search">
+                </a>
+                <a href="#!" class="header-menu-link-icon">
+                    <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
+                </a>
+                <a href="#!" class="header-menu-link-icon">
+                    <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                </a>
+            </div>
+        </div>
     </div>
-    |
-    <div class="header-menu-items">
-        <a href="#!" class="header-menu-link-icon">
-            <img src="{% static 'shop/images/svg/header/icon-search.svg' %}" alt="search">
-        </a>
-        <a href="#!" class="header-menu-link-icon">
-            <img src="{% static 'shop/images/svg/header/icon-shopping.svg' %}" alt="shopping">
-        </a>
-        <a href="#!" class="header-menu-link-icon">
-            <img src="{% static 'shop/images/svg/header/icon-user.svg' %}" alt="user">
-        </a>
-    </div>
-</div>
+</header>
 {% endblock %}
 
 {% block main %}

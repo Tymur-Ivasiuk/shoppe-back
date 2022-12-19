@@ -1,0 +1,169 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block css_styles %}
+<link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
+<link rel="stylesheet" href="{% static 'shop/css/products_list.css' %}">
+{% endblock %}
+
+{% block header %}
+<header class="header">
+    <div class="header-wrapper">
+        <div class="header-logo">
+            <a href="{% url 'home' %}" class="header-logo-link">
+                <h1 class="header-logo-link-title">
+                    SHOPPE
+                </h1>
+            </a>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-items">
+                <a href="{% url 'shop' %}" class="header-menu-link-text">
+                    Shop
+                </a>
+                <a href="#!" class="header-menu-link-text">
+                    Blog
+                </a>
+                <a href="#!" class="header-menu-link-text">
+                    Our Story
+                </a>
+            </div>
+            |
+            <div class="header-menu-items">
+                <a href="#!" class="header-menu-link-icon">
+                    <img src="{% static 'shop/img/svg/header/icon-search.svg' %}" alt="search">
+                </a>
+                <a href="#!" class="header-menu-link-icon">
+                    <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
+                </a>
+                <a href="#!" class="header-menu-link-icon">
+                    <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+{% block main %}
+<main class="main">
+    <h2 class="products-list-title">
+        Shop The Latest
+    </h2>
+    <section class="all-products">
+        <form action="{% url 'shop' %}" class="filter-form" method="get">
+
+
+            <p class="search-form">
+                {{ form.title }}
+
+                <button type="submit" class="search-form-button">
+                    <img src="{% static 'shop/img/svg/header/icon-search.svg' %}" alt="search" class="filter-search">
+                </button>
+            </p>
+            <div class="filter-buttons">
+                <div class="select">
+                    <button type="button" class="select_header" readonly="true">
+                        <div class="select_current">Category</div>
+                    </button>
+
+                    <ol class="select_list">
+                        <li class="select_item" data-value="">-------------</li>
+                        {% for d in form_select %}
+                            <li class="select_item" data-value="{{ d.0 }}">{{ d.1 }}</li>
+                        {% endfor %}
+
+
+                    </ol>
+
+                    <input type="text" name="category" value="" class="select_input-hidden">
+                </div>
+
+                <div class="select">
+                    <button type="button" class="select_header" readonly="true">
+                        <div class="select_current">Sort by</div>
+                    </button>
+
+                    <ol class="select_list">
+                        <li class="select_item" data-value="-time_create">First new</li>
+                        <li class="select_item" data-value="title">A -> Z</li>
+                        <li class="select_item" data-value="-title">Z -> A</li>
+                        <li class="select_item" data-value="sku">SKU</li>
+                        <li class="select_item" data-value="price">Price: Low-High</li>
+                        <li class="select_item" data-value="-price">Price: High-Low</li>
+                    </ol>
+                    <input type="text" name="order-by" value="" class="select_input-hidden">
+                </div>
+
+                <div class="double-range_wrapper">
+                    <div class="container">
+                        <div class="slider-track"></div>
+                        {{ form.price_min }}
+                        {{ form.price_max }}
+                    </div>
+                    <div class="values">
+                        <span>Price:</span>
+                        <span>$</span><span id="range1">0</span>
+                        <span> &dash; </span>
+                        <span>$</span><span id="range2">100</span>
+                    </div>
+                </div>
+
+<!--                <div class="checkbox">-->
+<!--                    <span class="checkbox-text">On sale</span>-->
+<!--                    <label class="switch">-->
+<!--                        <input type="checkbox" name="on-sale">-->
+<!--                        <span class="checkbox-switch round"></span>-->
+<!--                    </label>-->
+<!--                </div>-->
+                <div class="checkbox">
+                    <span class="checkbox-text">In stock</span>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="checkbox-switch round"></span>
+                    </label>
+                    {{ form.in_stock }}
+                </div>
+
+                <button type="submit" class="filter-submin-button">Filter</button>
+            </div>
+        </form>
+
+
+        <div class="table-items">
+            {% for i in products_list %}
+                <div class="table-item">
+                    <div class="table-item-wrap">
+                        <div class="table-item-card">
+                            <a href="{{ i.get_absolute_url }}" class="table-item-link">
+                                {% if i.photo_set.all %}
+                                    <img src="{{ i.photo_set.get.image.url }}" alt="1" class="table-item-pic">
+                                {% else %}
+                                    <img src="{% static 'shop/img/jpg/nothing-image.jpg' %}" alt="1" class="table-item-pic">
+                                {% endif %}
+                            </a>
+                        </div>
+                        <a href="#!" class="table-item-link">
+                            <p class="table-item-name">
+                                {{ i.title }}
+                            </p>
+                        </a>
+                        <p class="table-item-price">
+                            $ {{ i.price }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+    </section>
+    <!-- table-items end -->
+</main>
+{% endblock %}
+
+
+{% block js_scripts %}
+<script src="{% static 'shop/js/select.js' %}"></script>
+<script src="{% static 'shop/js/doubleRange.js' %}"></script>
+{% endblock %}

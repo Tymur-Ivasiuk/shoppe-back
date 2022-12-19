@@ -1,6 +1,11 @@
 {% extends 'shop/base.html' %}
 {% load static %}
 
+{% block css_styles %}
+<link type="text/css" href="{% static 'shop/css/styles.css' %}" rel="stylesheet">
+<link type="text/css" href="{% static 'shop/css/product_styles.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block header %}
 <header class="header">
     <div class="header-wrapper">
@@ -13,7 +18,7 @@
         </div>
         <div class="header-menu">
             <div class="header-menu-items">
-                <a href="{% url 'all_products' %}" class="header-menu-link-text">
+                <a href="{% url 'shop' %}" class="header-menu-link-text">
                     Shop
                 </a>
                 <a href="#!" class="header-menu-link-text">
@@ -26,13 +31,13 @@
             |
             <div class="header-menu-items">
                 <a href="#!" class="header-menu-link-icon">
-                    <img src="{% static 'shop/images/svg/header/icon-search.svg' %}" alt="search">
+                    <img src="{% static 'shop/img/svg/header/icon-search.svg' %}" alt="search">
                 </a>
                 <a href="#!" class="header-menu-link-icon">
-                    <img src="{% static 'shop/images/svg/header/icon-shopping.svg' %}" alt="shopping">
+                    <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
                 </a>
                 <a href="#!" class="header-menu-link-icon">
-                    <img src="{% static 'shop/images/svg/header/icon-user.svg' %}" alt="user">
+                    <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
                 </a>
             </div>
         </div>
@@ -46,7 +51,7 @@
         <h2 class="table-header-title">
             Shop The Latest
         </h2>
-        <a href="{% url 'all_products' %}" class="table-header-view-all">
+        <a href="{% url 'shop' %}" class="table-header-view-all">
             View All
         </a>
     </div>
@@ -63,18 +68,18 @@
                             {% endif %}
                         {% endfor %}
                     {% else %}
-                        <img src="{% static 'shop/images/jpg/nothing-image.jpg' %}" alt="1" class="table-item-pic">
+                        <img src="{% static 'shop/img/jpg/nothing-image.jpg' %}" alt="1" class="table-item-pic">
                     {% endif %}
                 </a>
                 <div class="table-item-icons">
                     <button class="table-item-icon" name="cart">
-                        <img src="{% static 'shop/images/svg/main/table_icons/cart-icon.svg' %}" alt="cart">
+                        <img src="{% static 'shop/img/svg/main/table_icons/cart-icon.svg' %}" alt="cart">
                     </button>
                     <button class="table-item-icon" name="visible">
-                        <img src="{% static 'shop/images/svg/main/table_icons/eye-icon.svg' %}" alt="eye">
+                        <img src="{% static 'shop/img/svg/main/table_icons/eye-icon.svg' %}" alt="eye">
                     </button>
                     <button class="table-item-icon" name="like">
-                        <img src="{% static 'shop/images/svg/main/table_icons/like-icon.svg' %}" alt="like">
+                        <img src="{% static 'shop/img/svg/main/table_icons/like-icon.svg' %}" alt="like">
                     </button>
                 </div>
             </div>

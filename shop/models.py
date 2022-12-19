@@ -17,6 +17,7 @@ class Product(models.Model):
     title = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=7, decimal_places=2, validators=[validate_positive])
     quantity = models.PositiveIntegerField()
+    # in_stock = models.BooleanField(default=0)
     description = models.TextField(blank=True)
     category_id = models.ForeignKey('Category', on_delete=models.PROTECT, default='0')
 
@@ -52,7 +53,7 @@ class AttributeValues(models.Model):
 
 class Photo(models.Model):
     product_id = models.ForeignKey('Product', on_delete=models.PROTECT)
-    image = models.ImageField(upload_to="images/%Y/%m/%d")
+    image = models.ImageField(upload_to="img/%Y/%m/%d")
     index = models.PositiveSmallIntegerField(default=0, blank=False, null=False, db_index=True)
 
     class Meta:
