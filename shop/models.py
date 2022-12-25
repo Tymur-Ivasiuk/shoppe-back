@@ -21,13 +21,13 @@ class Product(models.Model):
     quantity = models.PositiveIntegerField()
     # in_stock = models.BooleanField(default=0)
     description = models.TextField(blank=True)
-    category_id = models.ForeignKey('Category', on_delete=models.PROTECT, default='0')
+    category = models.ForeignKey('Category', on_delete=models.PROTECT, default='0')
 
     #m2m fields
     attribute_SET = models.ManyToManyField(
         'Attribute',
         through='AttributeValues',
-        through_fields=('product_id', 'attribute_id'),
+        through_fields=('product', 'attribute'),
     )
 
     time_create = models.DateTimeField(auto_now_add=True)
@@ -47,14 +47,14 @@ class Attribute(models.Model):
         return self.name
 
 class AttributeValues(models.Model):
-    product_id = models.ForeignKey('Product', on_delete=models.CASCADE)
-    attribute_id = models.ForeignKey('Attribute', on_delete=models.CASCADE)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    attribute = models.ForeignKey('Attribute', on_delete=models.CASCADE)
 
     value_text = models.CharField(max_length=128, default=' ')
 
 
 class Photo(models.Model):
-    product_id = models.ForeignKey('Product', on_delete=models.PROTECT)
+    product = models.ForeignKey('Product', on_delete=models.PROTECT)
     image = models.ImageField(upload_to="img/%Y/%m/%d")
     index = models.PositiveSmallIntegerField(default=0, blank=False, null=False, db_index=True)
 
@@ -70,8 +70,8 @@ class Review(models.Model):
     text = models.TextField()
     star_rating = models.PositiveSmallIntegerField(validators=[starValid], default=1)
     name = models.CharField(max_length=255, null=True)
-    user_id = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
-    product_id = models.ForeignKey('Product', on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, null=True)
 
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
@@ -88,7 +88,7 @@ class Order(models.Model):
 
     status = models.CharField(max_length=255, choices=status_var, default='New')
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[validate_positive], default=0)
-    user_id = models.ForeignKey(User, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
 
     #address
     first_name = models.CharField(max_length=255)
@@ -107,5 +107,5 @@ class Order(models.Model):
         return self.id
 
 class OrderList(models.Model):
-    order_id = models.ForeignKey('Order', on_delete=models.CASCADE)
-    product_id = models.ForeignKey('Product', on_delete=models.PROTECT)
+    order = models.ForeignKey('Order', on_delete=models.CASCADE)
+    product = models.ForeignKey('Product', on_delete=models.PROTECT)

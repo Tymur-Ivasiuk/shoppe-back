@@ -14,7 +14,7 @@ class ProductFilter(django_filters.FilterSet):
         widget=forms.TextInput(attrs={'placeholder': 'Search...'})
     )
     category = django_filters.CharFilter(
-        field_name='category_id',
+        field_name='category',
         lookup_expr='exact',
         widget=forms.TextInput(attrs={'name': 'category', 'value': '', })
     )

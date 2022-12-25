@@ -66,11 +66,11 @@ class ReviewForm(forms.ModelForm):
     star_rating = forms.IntegerField(
         widget=forms.RadioSelect(choices=rating),
     )
-    user_id = forms.IntegerField(required=False)
-    product_id = forms.IntegerField(required=False)
+    user = forms.IntegerField(required=False)
+    product = forms.IntegerField(required=False)
 
     class Meta:
         model = Review
-        fields = ('text', 'name', 'star_rating', 'user_id', 'product_id')
+        fields = ('text', 'name', 'star_rating', 'user', 'product')
 
 

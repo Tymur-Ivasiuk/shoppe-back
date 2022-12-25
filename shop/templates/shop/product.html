@@ -186,7 +186,7 @@
                     Categories:
                 </span>
                 <span class="product-info_categories-selected">
-                    {{ product.category_id.name }}
+                    {{ product.category.name }}
                 </span>
             </div>
         </div>
@@ -208,7 +208,7 @@
 
         <div id="Aditional information" class="tabcontent">
             {% for i in product.attributevalues_set.all %}
-                <p class="parametr">{{ i.attribute_id }}:<span class="f-span">{{ i.value_text }}</span></p>
+                <p class="parametr">{{ i.attribute }}:<span class="f-span">{{ i.value_text }}</span></p>
             {% endfor %}
         </div>
 

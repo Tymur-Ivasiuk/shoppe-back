@@ -61,7 +61,7 @@ class ProductView(DetailView):
 
         context['review_form'] = ReviewForm()
 
-        context['similar'] = Product.objects.filter(category_id=context['object'].category_id).exclude(id=self.kwargs['product_id']).prefetch_related(
+        context['similar'] = Product.objects.filter(category=context['object'].category).exclude(id=self.kwargs['product_id']).prefetch_related(
             Prefetch('photo_set', queryset=Photo.objects.filter(index=1))
         ).order_by('-time_create')
 
@@ -71,9 +71,9 @@ class ProductView(DetailView):
         form = ReviewForm(request.POST)
         if form.is_valid():
             form = form.save(commit=False)
-            form.product_id = Product.objects.get(id=product_id)
+            form.product = Product.objects.get(id=product_id)
             if request.user.is_authenticated:
-                form.user_id = request.user
+                form.user = request.user
                 form.name = f'{request.user.first_name} {request.user.last_name}'
             form.save()
         return redirect('product_page', product_id)
