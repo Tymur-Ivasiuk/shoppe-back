@@ -1,7 +1,11 @@
+from django.contrib.auth import logout
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.views import LoginView
 from django.db.models import Prefetch
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
-from django.views.generic import ListView, DetailView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, TemplateView, CreateView
 
 from .filters import ProductFilter
 from .forms import *
@@ -44,13 +48,6 @@ class Shop(ListView):
 
         return self.filterset.qs
 
-    # def get(self, request):
-    #     print(request.GET)
-    #
-    #     return render(request, self.template_name, )
-
-
-
 
 class ProductView(DetailView):
     model = Product
@@ -61,12 +58,69 @@ class ProductView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = context['product']
-        context['photos'] = Photo.objects.filter(product_id=self.kwargs['product_id'])
+
+        context['review_form'] = ReviewForm()
+
+        context['similar'] = Product.objects.filter(category_id=context['object'].category_id).exclude(id=self.kwargs['product_id']).prefetch_related(
+            Prefetch('photo_set', queryset=Photo.objects.filter(index=1))
+        ).order_by('-time_create')
 
         return context
 
+    def post(self, request, product_id):
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.product_id = Product.objects.get(id=product_id)
+            if request.user.is_authenticated:
+                form.user_id = request.user
+                form.name = f'{request.user.first_name} {request.user.last_name}'
+            form.save()
+        return redirect('product_page', product_id)
 
 
+class TermsOfServives(TemplateView):
+    template_name = 'shop/privacy.html'
+
+
+
+# user
+class RegisterUser(CreateView):
+    template_name = 'shop/register.html'
+    success_url = reverse_lazy('login')
+    form_class = RegisterUserForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Register'
+        return context
+
+class LoginUser(LoginView):
+    form_class = LoginUserForm
+    template_name = 'shop/login.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Login'
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('account')
+
+class AccountView(TemplateView):
+    template_name = 'shop/account.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Account'
+        context['user'] = User.objects.get(username=self.request.user)
+
+
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('home')
 
 def pageNotFound(request, exception):
     return render(request, 'shop/error.html', {'title': 'Страница не найдена'})

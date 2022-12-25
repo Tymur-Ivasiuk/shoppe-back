@@ -36,9 +36,15 @@
                 <a href="#!" class="header-menu-link-icon">
                     <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
                 </a>
-                <a href="#!" class="header-menu-link-icon">
-                    <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
-                </a>
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'account' %}" class="header-menu-link-icon">
+                        <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="header-menu-link-icon">
+                        <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -46,53 +52,45 @@
 {% endblock header %}
 
 {% block main %}
-<section class="shop-table">
-    <div class="table-header">
-        <h2 class="table-header-title">
-            Shop The Latest
-        </h2>
-        <a href="{% url 'shop' %}" class="table-header-view-all">
-            View All
-        </a>
-    </div>
-
-    <div class="table-items">
-    {% for i in products %}
-        <div class="table-item">
-            <div class="table-item-card">
-                <a href="{{ i.get_absolute_url }}" class="table-item-link">
-                    {% if i.photo_set.all %}
-                        {% for el in i.photo_set.all %}
-                            {% if el.index == 1 %}
-                                <img src="{{ el.image.url }}" alt="1" class="table-item-pic">
-                            {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        <img src="{% static 'shop/img/jpg/nothing-image.jpg' %}" alt="1" class="table-item-pic">
-                    {% endif %}
-                </a>
-                <div class="table-item-icons">
-                    <button class="table-item-icon" name="cart">
-                        <img src="{% static 'shop/img/svg/main/table_icons/cart-icon.svg' %}" alt="cart">
-                    </button>
-                    <button class="table-item-icon" name="visible">
-                        <img src="{% static 'shop/img/svg/main/table_icons/eye-icon.svg' %}" alt="eye">
-                    </button>
-                    <button class="table-item-icon" name="like">
-                        <img src="{% static 'shop/img/svg/main/table_icons/like-icon.svg' %}" alt="like">
-                    </button>
-                </div>
-            </div>
-            <a href="{{ i.get_absolute_url }}" class="table-item-link">
-                <p class="table-item-name">
-                    {{ i.title }}
-                </p>
+<main class="main">
+    <section class="shop-table">
+        <div class="table-header">
+            <h2 class="table-header-title">
+                Shop The Latest
+            </h2>
+            <a href="{% url 'shop' %}" class="table-header-view-all">
+                View All
             </a>
-            <p class="table-item-price">
-                ₴ {{ i.price }}
-            </p>
         </div>
-    {% endfor %}
-    </div>
-</section>
+
+        <div class="table-items">
+        {% for i in products %}
+            <div class="table-item">
+                <div class="table-item-card">
+                    <a href="{{ i.get_absolute_url }}" class="table-item-link">
+                        {% if i.photo_set.all %}
+                            {% for el in i.photo_set.all %}
+                                {% if el.index == 1 %}
+                                    <img src="{{ el.image.url }}" alt="1" class="table-item-pic">
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <img src="{% static 'shop/img/jpg/nothing-image.jpg' %}" alt="1" class="table-item-pic">
+                        {% endif %}
+                    </a>
+
+                </div>
+                <a href="{{ i.get_absolute_url }}" class="table-item-link">
+                    <p class="table-item-name">
+                        {{ i.title }}
+                    </p>
+                </a>
+                <p class="table-item-price">
+                    ₴ {{ i.price }}
+                </p>
+            </div>
+        {% endfor %}
+        </div>
+    </section>
+</main>
 {% endblock %}

@@ -279,7 +279,7 @@ input:checked + .checkbox-switch:before {
 
 /* TABLE ITEMS LIST */
 
-.table-items {
+.table-items-shop {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

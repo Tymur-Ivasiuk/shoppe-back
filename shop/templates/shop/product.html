@@ -41,9 +41,15 @@
                 <a href="#!" class="header-menu-link-icon">
                     <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
                 </a>
-                <a href="#!" class="header-menu-link-icon">
-                    <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
-                </a>
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'account' %}" class="header-menu-link-icon">
+                        <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="header-menu-link-icon">
+                        <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -69,8 +75,8 @@
         <div class="product-images">
             <div class="nav-container">
                 <div class="slider-nav product-images-slider-nav">
-                    {% if photos %}
-                        {% for i in photos %}
+                    {% if product.photo_set.all %}
+                        {% for i in product.photo_set.all %}
                             <div class="product-image-small-wrap">
                                 <img src="{{ i.image.url }}" alt="image" class="product-image-small">
                             </div>
@@ -84,8 +90,8 @@
             </div>
             <div class="main-container">
                 <div class="slider slider-main product-image-slider">
-                    {% if photos %}
-                        {% for i in photos %}
+                    {% if product.photo_set.all %}
+                        {% for i in product.photo_set.all %}
                             <div class="product-image-big-wrap">
                                 <img src="{{ i.image.url }}" alt="image" class="product-image-big">
                             </div>
@@ -125,20 +131,26 @@
             </p>
 
             <div class="product-info_order">
-                <div class="product-info_order-amount">
-                    <input type="button" value="-" id="button_minus" class="disabled">
-                    <input type="number" step="1" min="1" max="{{ product.quantity }}" id="num_count" name="quantity" value="1" title="Qty" readonly="true">
-                    {% if product.quantity <= 1 %}
-                        <input type="button" value="+" id="button_plus" class="disabled">
-                    {% else %}
-                        <input type="button" value="+" id="button_plus">
-                    {% endif %}
-                </div>
-                <div class="product-info_order-button-cart">
-                    <button class="product-info_order-button-cart-text" id="add">
-                        ADD TO CART
-                    </button>
-                </div>
+                {% if product.quantity %}
+                    <div class="product-info_order-amount">
+                        <input type="button" value="-" id="button_minus" class="disabled">
+                        <input type="number" step="1" min="1" max="{{ product.quantity }}" id="num_count" name="quantity" value="1" title="Qty" readonly="true">
+                        {% if product.quantity <= 1 %}
+                            <input type="button" value="+" id="button_plus" class="disabled">
+                        {% else %}
+                            <input type="button" value="+" id="button_plus">
+                        {% endif %}
+                    </div>
+                    <div class="product-info_order-button-cart">
+                        <button class="product-info_order-button-cart-text" id="add">
+                            ADD TO CART
+                        </button>
+                    </div>
+                {% else %}
+                    <div class="product-info_not-available">
+                        Not available
+                    </div>
+                {% endif %}
             </div>
 
             <div class="product-info_buttons">
@@ -256,25 +268,25 @@
                     <p class="form-desc">
                         Your email address will not be published. Required fields are marked *
                     </p>
-                    <form>
-                        <textarea name="your-review" id="review" class="review-text form-input" placeholder="Your Review*" required></textarea>
-                        <input type="text" class="name-input form-input" placeholder="Enter your name*" required>
-                        <input type="email" class="email-input form-input" placeholder="Enter your Email*" required>
-                        <div class="checbox-info">
-                            <input type="checkbox" class="save-info-input">
-                            <label class="checkbox-desc">Save my name, email, and website in this browser for the next time I comment</label>
-                        </div>
-                        <p class="form-text-stars">Your Rating*</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ review_form.text }}
+
+                        {% if not request.user.is_authenticated %}
+                            {{ review_form.name }}
+                        {% endif %}
+
+                        <p class="form-text-stars">Your Rating *</p>
 
                         <div class="rating">
-                            <input name="stars" id="5" type="radio"><label for="5"></label>
-                            <input name="stars" id="4" type="radio"><label for="4"></label>
-                            <input name="stars" id="3" type="radio"><label for="3"></label>
-                            <input name="stars" id="2" type="radio"><label for="2"></label>
-                            <input name="stars" id="1" type="radio"><label for="1"></label>
+                            {% for i in review_form.star_rating %}
+                                {{ i.tag }}
+                                <label for="{{i.id_for_label}}"></label>
+                            {% endfor %}
                         </div>
 
                         <input type="submit" class="submit-input" value="Submit">
+
 
                     </form>
                 </div>
@@ -283,39 +295,38 @@
 
 
     </section>
+    {% if similar %}
+
+
     <section class="similar-items">
         <h2 class="similar-title">
             Similar Items
         </h2>
         <div class="table-items">
-            <div class="table-item">
-                <div class="table-item-card">
-                    <a href="#!" class="table-item-link">
-                        <img src="./img/jpg/home-items/Img 01.jpg" alt="1" class="table-item-pic">
-                    </a>
-                    <div class="table-item-icons">
-                        <button class="table-item-icon" name="cart">
-                            <img src="./img/svg/main/table icons/cart-icon.svg" alt="cart">
-                        </button>
-                        <button class="table-item-icon" name="visible">
-                            <img src="./img/svg/main/table icons/eye-icon.svg" alt="eye">
-                        </button>
-                        <button class="table-item-icon" name="like">
-                            <img src="./img/svg/main/table icons/like-icon.svg" alt="like">
-                        </button>
+            {% for i in similar %}
+                <div class="table-item">
+                    <div class="table-item-card">
+                        <a href="{{ i.get_absolute_url }}" class="table-item-link">
+                            {% if i.photo_set.all %}
+                                <img src="{{ i.photo_set.all.0.image.url }}" alt="image" class="table-item-pic">
+                            {% else %}
+                                <img src="{% static 'shop/img/jpg/nothing-image.jpg' %}" alt="image" class="table-item-pic">
+                            {% endif %}
+                        </a>
                     </div>
-                </div>
-                <a href="#!" class="table-item-link">
-                    <p class="table-item-name">
-                        Lira Earrings
+                    <a href="#!" class="table-item-link">
+                        <p class="table-item-name">
+                            {{ i.title }}
+                        </p>
+                    </a>
+                    <p class="table-item-price">
+                        {{ i.price }}
                     </p>
-                </a>
-                <p class="table-item-price">
-                    $ 20,00
-                </p>
-            </div>
-
+                </div>
+            {% endfor %}
+        </div>
     </section>
+    {% endif %}
 </main>
 {% endblock main %}
 

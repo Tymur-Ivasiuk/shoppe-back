@@ -22,7 +22,7 @@
     padding: 5px;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 126px;
+    margin-bottom: 69px;
 }
 .link-url {
     width: 100%;
@@ -46,10 +46,16 @@
     flex-direction: column;
     margin-bottom: 13px;
 }
+.input-wrap {
+    margin-bottom: 15px;
+}
+.input-wrap:last-of-type {
+    margin-bottom: 69px;
+}
 .sign-in_form-input {
     width: 100%;
 
-    margin-bottom: 46px;
+    margin-bottom: 10px;
 
     background: transparent;
     border: 0;
@@ -70,7 +76,7 @@
 
 
 /* CHECKBOX STYLES */
-.checbox-info {
+.checkbox-info {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
@@ -140,6 +146,9 @@
 .register {
     margin-bottom: 33px;
 }
-.register:last-of-type {
-    margin-bottom: 69px;
+
+
+.form-errors {
+    color: rgb(255, 0, 0);
+    margin-bottom: 15px;
 }

@@ -1,11 +1,12 @@
 {% extends 'shop/base.html' %}
+{% load static %}
 
 {% block css_styles %}
-<link type="text/css" href="{% static 'shop/css/styles.css' %}" rel="stylesheet">
-<link type="text/css" href="{% static 'shop/css/product_styles.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
+<link rel="stylesheet" href="{% static 'shop/css/signin.css' %}">
 {% endblock %}
 
-{% block menu_i %}
+{% block header %}
 <header class="header">
     <div class="header-wrapper header-border">
         <div class="header-logo">
@@ -17,7 +18,7 @@
         </div>
         <div class="header-menu">
             <div class="header-menu-items">
-                <a href="{% url 'all_products' %}" class="header-menu-link-text flicking">
+                <a href="{% url 'shop' %}" class="header-menu-link-text">
                     Shop
                 </a>
                 <a href="#!" class="header-menu-link-text">
@@ -35,36 +36,39 @@
                 <a href="#!" class="header-menu-link-icon">
                     <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
                 </a>
-                {% if request.user.is_authenticated %}
-                    <a href="{% url 'account' %}" class="header-menu-link-icon">
-                        <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
-                    </a>
-                {% else %}
-                    <a href="{% url 'login' %}" class="header-menu-link-icon">
-                        <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
-                    </a>
-                {% endif %}
+                <a href="{% url 'login' %}" class="header-menu-link-icon flicking">
+                    <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                </a>
             </div>
         </div>
     </div>
 </header>
-{% endblock %}
+{% endblock header %}
 
 {% block main %}
 <main class="main">
-    <div class="error">
-        <h2 class="error-title">
-            404 ERROR
-        </h2>
-        <p class="error-text">
-            This page not found;
-            back to home and start again
-        </p>
-        <a href="{% url 'home' %}" class="error-link">
-            <div class="error-link-button">
-                HOMEPAGE
-            </div>
-        </a>
+    <div class="sign-in">
+        <h1 class="sign-in_title">
+            My account
+        </h1>
+        <div class="links-reg">
+            <a href="{% url 'login' %}" class="link-url">Sign in</a>
+            <a href="{% url 'register' %}" class="link-url active-url">Register</a>
+        </div>
+
+        <form class="sign-in_form" method="post">
+            {% csrf_token %}
+            {% for i in form %}
+                <div class="input-wrap">
+                    {{ i }}
+                    <div class="form-errors">
+                        {{ i.errors }}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="sign-in_form-submit">REGISTER</button>
+        </form>
     </div>
 </main>
 {% endblock %}

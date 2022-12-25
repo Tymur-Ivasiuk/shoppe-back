@@ -1,0 +1,155 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block css_styles %}
+<link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
+<link rel="stylesheet" href="{% static 'shop/css/account.css' %}">
+{% endblock %}
+
+{% block header %}
+<header class="header">
+    <div class="header-wrapper header-border">
+        <div class="header-logo">
+            <a href="{% url 'home' %}" class="header-logo-link">
+                <h1 class="header-logo-link-title">
+                    SHOPPE
+                </h1>
+            </a>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-items">
+                <a href="{% url 'shop' %}" class="header-menu-link-text">
+                    Shop
+                </a>
+                <a href="#!" class="header-menu-link-text">
+                    Blog
+                </a>
+                <a href="#!" class="header-menu-link-text">
+                    Our Story
+                </a>
+            </div>
+            |
+            <div class="header-menu-items">
+                <a href="#!" class="header-menu-link-icon">
+                    <img src="{% static 'shop/img/svg/header/icon-search.svg' %}" alt="search">
+                </a>
+                <a href="#!" class="header-menu-link-icon">
+                    <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
+                </a>
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'account' %}" class="header-menu-link-icon flicking">
+                        <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="header-menu-link-icon flicking">
+                        <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock header %}
+
+{% block main %}
+<main class="main">
+    <h1 class="account-title">
+        My Account
+    </h1>
+
+    <section class="account-tabs">
+        <!-- Tab links -->
+        <div class="tab">
+            <button class="tablinks" id="defaultOpen" onclick="openCity(event, 'Dashboard')">Dashboard</button>
+            <button class="tablinks" onclick="openCity(event, 'Orders')">Orders</button>
+            <button class="tablinks" onclick="openCity(event, 'Account details')">Account details</button>
+            <a href="{% url 'logout' %}" class="tablinks">Logout</a>
+        </div>
+
+        <!-- Tab content -->
+        <div id="Dashboard" class="tabcontent">
+            <p class="dashboard-p">Hello {{ user.first_name }} (not {{ user.first_name }}? <a href="{% url 'logout' %}" class="dashboard-link">Log out</a>)</p>
+<!--            <p class="dashboard-p">From your account dashboard you can view your <a href="#!" class="dashboard-link">recent orders</a>, manage your <a href="#!" class="dashboard-link">shipping and billing addresses</a>, and edit your <a href="#!" class="dashboard-link">password and account details.</a></p>-->
+        </div>
+
+        <div id="Orders" class="tabcontent">
+            <!-- if nothing -->
+            {% if user.order_set.all %}
+                <table class="account-table">
+                    <tbody>
+                        <tr>
+                            <th>ORDER NUMBER</th>
+                            <th>DATE</th>
+                            <th>STATUS</th>
+                            <th>TOTAL</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                        {% for i in order_list.order_set.all %}
+                            <tr>
+                                <td>i.id</td>
+                                <td>October 8,2021</td>
+                                <td>i.status</td>
+                                <td>$ 105</td>
+                                <td><a href="#!" class="account-table-link">View Order</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="account-message">
+                    <p class="account-message-text">
+                        No order has been made yet.
+                    </p>
+                    <a href="{% url 'shop' %}" class="account-message-link">
+                        BROWSE PRODUCT
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div id="Account details" class="tabcontent">
+            <div class="account-details-wrap">
+                <h2 class="account-details-title">
+                    Account details
+                </h2>
+                <form action="" class="account-details-form">
+                    <div class="input-wrap">
+                        <input type="text" class="sign-in_form-input register" placeholder="First name" required>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="text" class="sign-in_form-input register" placeholder="Last name" required>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="text" class="sign-in_form-input register" placeholder="Display name" required>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="text" class="sign-in_form-input register" placeholder="Email" required>
+                    </div>
+
+                    <h3>
+                        Password change
+                    </h3>
+                    <div class="input-wrap">
+                        <input type="text" class="sign-in_form-input register" placeholder="Current password (leave blank to leave unchanged)" required>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="text" class="sign-in_form-input register" placeholder="New password (leave blank to leave unchanged)" required>
+                    </div>
+                    <div class="input-wrap">
+                        <input type="text" class="sign-in_form-input register" placeholder="Confirm new password" required>
+                    </div>
+
+
+                    <button type="submit" class="sign-in_form-submit">SAVE CHANGES</button>
+
+                </form>
+            </div>
+        </div>
+
+    </section>
+</main>
+{% endblock %}
+
+{% block js_scripts %}
+<script src="{% static 'shop/js/tabs.js' %}"></script>
+{% endblock %}

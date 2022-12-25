@@ -449,6 +449,7 @@ body {
 
 .main {
     flex: 1 1 auto;
+    margin-bottom: 250px;
 }
 /* STYLES CSS start */
 
@@ -632,7 +633,6 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(377px, 1fr));
     grid-gap: 86px 57px;
-    margin-bottom: 250px;
     justify-items: center;
 }
 .table-item-wrap {

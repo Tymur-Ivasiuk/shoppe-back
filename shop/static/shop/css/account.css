@@ -1,0 +1,185 @@
+.account-title {
+    margin: 96px auto 64px auto;
+    text-align: center;
+    font-weight: 500;
+    font-size: 33px;
+    line-height: 43px;
+    color: #000000;
+}
+
+.tab {
+    overflow: hidden;
+    border-bottom: 1px solid #D8D8D8;
+}
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin-right: 96px;
+
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 26px;
+    color: #707070;
+    padding-bottom: 34px;
+    transition: 1s;
+}
+.tab button.active {
+    border-bottom: 1px solid #000;
+
+    color: #000;
+}
+.tab a {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 26px;
+    color: #707070;
+    padding-bottom: 34px;
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.tabcontent {
+    display: none;
+    padding-top: 40px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 27px;
+    color: #707070;
+    margin-bottom: 66px;
+}
+
+.dashboard-p {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 27px;
+
+    color: #000000;
+}
+.dashboard-link {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 27px;
+    color: #A18A68 !important;
+    text-decoration: none;
+}
+
+.account-message {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background-color: #EFEFEF;
+    border-top: 2px solid #A18A68;
+}
+.account-message-link {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 21px;
+    color: #A18A68;
+    text-decoration: none;
+}
+
+
+
+.account-table {
+    table-layout: fixed;
+    width: 100%;
+
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 27px;
+    color: #707070;
+}
+.account-table tr {
+    border-bottom: 1px solid #D8D8D8;
+
+}
+.account-table th {
+    padding: 24px 0;
+    text-align: left;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 27px;
+    color: #000000;
+    border-bottom: 1px solid #000000;
+}
+.account-table td {
+    padding: 24px 0;
+    height: 40px;
+}
+.account-table-link {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 21px;
+    color: #A18A68;
+    text-decoration: none;
+    transition: .3s ease;
+}
+.account-table-link:hover, .account-table-link:focus, .account-table-link:active {
+    color: #000;
+}
+
+.account-details-wrap {
+    margin: 0 auto;
+    width: 45%;
+}
+.account-details-wrap h3 {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 21px;
+    color: #000000;
+    margin-top:48px;
+    margin-bottom: 35px;
+}
+.account-details-title {
+    font-weight: 500;
+    font-size: 33px;
+    line-height: 43px;
+    color: #000000;
+    text-align: center;
+    margin-bottom: 37px;
+}
+.input-wrap {
+    margin-bottom: 15px;
+}
+.input-wrap:last-of-type {
+    margin-bottom: 57px;
+}
+.sign-in_form-input {
+    width: 100%;
+
+    margin-bottom: 10px;
+
+    background: transparent;
+    border: 0;
+    padding: 12px 0;
+
+    font-family: inherit;
+    font-size: inherit;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 27px;
+
+    border-bottom: 1px solid #D8D8D8;
+}
+.sign-in_form-input:last-of-type {
+    margin-bottom: 15px;
+}
+
+.sign-in_form-submit{
+    width: 100%;
+    padding: 16px 0;
+    border: 0;
+    border: 2px solid #000;
+    transition: .4s ease;
+    background: #000;
+    color: #fff;
+}
+.sign-in_form-submit:hover, .sign-in_form-submit:focus, .sign-in_form-submit:active {
+    background: #fff;
+    color: #000;
+}

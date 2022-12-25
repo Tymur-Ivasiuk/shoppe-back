@@ -1,0 +1,86 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block css_styles %}
+<link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
+<link rel="stylesheet" href="{% static 'shop/css/signin.css' %}">
+{% endblock %}
+
+{% block header %}
+<header class="header">
+    <div class="header-wrapper header-border">
+        <div class="header-logo">
+            <a href="{% url 'home' %}" class="header-logo-link">
+                <h1 class="header-logo-link-title">
+                    SHOPPE
+                </h1>
+            </a>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-items">
+                <a href="{% url 'shop' %}" class="header-menu-link-text">
+                    Shop
+                </a>
+                <a href="#!" class="header-menu-link-text">
+                    Blog
+                </a>
+                <a href="#!" class="header-menu-link-text">
+                    Our Story
+                </a>
+            </div>
+            |
+            <div class="header-menu-items">
+                <a href="#!" class="header-menu-link-icon">
+                    <img src="{% static 'shop/img/svg/header/icon-search.svg' %}" alt="search">
+                </a>
+                <a href="#!" class="header-menu-link-icon">
+                    <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
+                </a>
+                <a href="{% url 'login' %}" class="header-menu-link-icon flicking">
+                    <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock header %}
+
+{% block main %}
+<main class="main">
+    <div class="sign-in">
+        <h1 class="sign-in_title">
+            My account
+        </h1>
+        <div class="links-reg">
+            <a href="{% url 'login' %}" class="link-url active-url">Sign in</a>
+            <a href="{% url 'register' %}" class="link-url">Register</a>
+        </div>
+
+        <form class="sign-in_form" method="post">
+            {% csrf_token %}
+            <div class="form-errors">
+                {{ form.non_field_errors }}
+            </div>
+
+            {% for i in form %}
+                <div class="input-wrap">
+                    {{ i }}
+                    <div class="form-errors">
+                        {{ i.errors }}
+                    </div>
+                </div>
+            {% endfor %}
+<!--            <input type="email" class="sign-in_form-input" placeholder="Email" required>-->
+<!--            <input type="password" class="sign-in_form-input" placeholder="Password" required>-->
+    <!--        <div class="checkbox-info">-->
+    <!--            <input type="checkbox" class="save-info-input">-->
+    <!--            <label class="checkbox-desc">Remember me</label>-->
+    <!--        </div>-->
+
+            <button type="submit" class="sign-in_form-submit">SIGN IN</button>
+        </form>
+        <a href="#!" class="forgotten-pass">Have you forgotten your password?</a>
+    </div>
+</main>
+{% endblock %}
+

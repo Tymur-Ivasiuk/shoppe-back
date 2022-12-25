@@ -5,14 +5,14 @@ from .models import *
 
 class PhotoInlines(SortableTabularInline, admin.TabularInline):
     model = Photo
-    extra = 1
+    extra = 0
     fields = ['image_tag', 'image', 'index']
     readonly_fields = ['image_tag']
 
 class AttributeValuesInlines(admin.TabularInline):
     model = AttributeValues
     list_display = ['attribute_id']
-    extra = 1
+    extra = 0
 
 class ProductAdmin(SortableAdminBase, admin.ModelAdmin):
     inlines = [
