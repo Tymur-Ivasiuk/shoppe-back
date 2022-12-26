@@ -67,7 +67,7 @@ class Photo(models.Model):
 
 
 class Review(models.Model):
-    text = models.TextField()
+    text = models.TextField(max_length=255)
     star_rating = models.PositiveSmallIntegerField(validators=[starValid], default=1)
     name = models.CharField(max_length=255, null=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT, null=True)

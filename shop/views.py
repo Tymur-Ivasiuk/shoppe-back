@@ -1,7 +1,7 @@
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.views import LoginView
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Avg
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.urls import reverse_lazy
@@ -22,7 +22,7 @@ class HomePage(ListView):
         return context
 
     def get_queryset(self):
-        return Product.objects.all().prefetch_related('photo_set').order_by('-time_create')[:5]
+        return Product.objects.all().prefetch_related('photo_set').order_by('-time_create')[:6]
 
 
 class Shop(ListView):
@@ -60,9 +60,10 @@ class ProductView(DetailView):
         context['title'] = context['product']
 
         context['review_form'] = ReviewForm()
+        context['avg_star'] = round(Review.objects.filter(product=self.kwargs['product_id']).aggregate(Avg('star_rating')).get('star_rating__avg'))
 
         context['similar'] = Product.objects.filter(category=context['object'].category).exclude(id=self.kwargs['product_id']).prefetch_related(
-            Prefetch('photo_set', queryset=Photo.objects.filter(index=1))
+            Prefetch('photo_set', queryset=Photo.objects.filter(index=1))[:3]
         ).order_by('-time_create')
 
         return context

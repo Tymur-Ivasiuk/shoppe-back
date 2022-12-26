@@ -1,5 +1,6 @@
 {% extends 'shop/base.html' %}
 {% load static %}
+{% load shop_tags %}
 
 {% block css_styles %}
 <link type="text/css" href="{% static 'shop/css/styles.css' %}" rel="stylesheet">
@@ -114,15 +115,17 @@
             </p>
 
             <div class="product-info_rate">
+
                 <div class="product-info_rate-stars">
-                    <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
-                    <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
-                    <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
-                    <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
-                    <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
+                    {% for i in avg_star|range_list %}
+                        <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="product-info_rate-star">
+                    {% endfor %}
+                    {% for i in avg_star|range_list_minus %}
+                        <img src="{% static 'shop/img/svg/main/product_icons/star-rate-off.svg' %}" alt="star" class="product-info_rate-star">
+                    {% endfor %}
                 </div>
                 <p class="product-info_rate-rewiews">
-                    1 customer review
+                    {{ product.review_set.all|length }} customer review
                 </p>
             </div>
 
@@ -216,49 +219,33 @@
             <div class="reviews-wrap">
                 <div class="reviews-comment">
                     <h2 class="reviews-comment-title">
-                        2 Reviews for lira earings
+                        {{ product.review_set.all|length }} Reviews for lira earings
                     </h2>
                     <div class="comments">
-                        <div class="comment">
-                            <div class="comment-info">
-                                <p class="comment-info_username">
-                                    Scarlet withch
-                                </p>
-                                <p class="comment-info_date">
-                                    6 May, 2020
-                                </p>
+                        {% for i in product.review_set.all %}
+                            <div class="comment">
+                                <div class="comment-info">
+                                    <p class="comment-info_username">
+                                        {{ i.name }}
+                                    </p>
+                                    <p class="comment-info_date">
+                                        {{ i.time_create|date:"j M, Y" }}
+                                    </p>
+                                </div>
+                                <div class="comment-stars">
+                                    {% for i in i.star_rating|range_list %}
+                                        <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
+                                    {% endfor %}
+                                    {% for i in i.star_rating|range_list_minus %}
+                                        <img src="{% static 'shop/img/svg/main/product_icons/star-rate-off.svg' %}" alt="star" class="review-star">
+                                    {% endfor %}
+                                </div>
+                                <div class="comment-text">
+                                    {{ i.text }}
+                                </div>
                             </div>
-                            <div class="comment-stars">
-                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                            </div>
-                            <div class="comment-text">
-                                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam placerat.
-                            </div>
-                        </div>
-                        <div class="comment">
-                            <div class="comment-info">
-                                <p class="comment-info_username">
-                                    Scarlet withch
-                                </p>
-                                <p class="comment-info_date">
-                                    6 May, 2020
-                                </p>
-                            </div>
-                            <div class="comment-stars">
-                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                                <img src="{% static 'shop/img/svg/main/product_icons/star-rate-icon.svg' %}" alt="star" class="review-star">
-                            </div>
-                            <div class="comment-text">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, explicabo.
-                            </div>
-                        </div>
+                        {% endfor %}
+
                     </div>
                 </div>
                 <div class="reviews-form">
