@@ -1,9 +1,6 @@
 import phonenumber_field.formfields
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
-from phonenumber_field.formfields import PhoneNumberField
-from phonenumber_field.widgets import PhoneNumberPrefixWidget, RegionalPhoneNumberWidget
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 
 from .models import *
 
@@ -47,6 +44,28 @@ class LoginUserForm(AuthenticationForm):
         required=True,
         widget=forms.PasswordInput(attrs={'class': 'sign-in_form-input', 'placeholder': 'Password'})
     )
+
+
+class UpdateUserForm(UserChangeForm):
+    first_name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'sign-in_form-input register', 'placeholder': 'First name'})
+    )
+    last_name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'sign-in_form-input register', 'placeholder': 'Last name'})
+    )
+    email = forms.CharField(
+        required=False,
+        widget=forms.EmailInput(attrs={'class': 'sign-in_form-input register', 'placeholder': 'Email'})
+    )
+    username = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'sign-in_form-input register', 'placeholder': 'Username'})
+    )
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'username')
 
 
 class ReviewForm(forms.ModelForm):

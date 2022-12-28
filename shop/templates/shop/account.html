@@ -145,33 +145,23 @@
                 <h2 class="account-details-title">
                     Account details
                 </h2>
-                <form action="" class="account-details-form">
+                <form action="{% url 'account' %}" class="account-details-form" method="post">
+                    {% csrf_token %}
                     <div class="input-wrap">
-                        <input type="text" class="sign-in_form-input register" placeholder="First name" required>
+                        {{ user_form.first_name }}
                     </div>
                     <div class="input-wrap">
-                        <input type="text" class="sign-in_form-input register" placeholder="Last name" required>
+                        {{ user_form.last_name }}
                     </div>
                     <div class="input-wrap">
-                        <input type="text" class="sign-in_form-input register" placeholder="Display name" required>
+                        {{ user_form.username }}
+                        <div class="form-errors">
+                            {{ user_form.username.errors }}
+                        </div>
                     </div>
                     <div class="input-wrap">
-                        <input type="text" class="sign-in_form-input register" placeholder="Email" required>
+                        {{ user_form.email }}
                     </div>
-
-                    <h3>
-                        Password change
-                    </h3>
-                    <div class="input-wrap">
-                        <input type="text" class="sign-in_form-input register" placeholder="Current password (leave blank to leave unchanged)" required>
-                    </div>
-                    <div class="input-wrap">
-                        <input type="text" class="sign-in_form-input register" placeholder="New password (leave blank to leave unchanged)" required>
-                    </div>
-                    <div class="input-wrap">
-                        <input type="text" class="sign-in_form-input register" placeholder="Confirm new password" required>
-                    </div>
-
 
                     <button type="submit" class="sign-in_form-submit">SAVE CHANGES</button>
 

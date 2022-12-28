@@ -129,6 +129,7 @@ class AccountView(TemplateView):
         context['title'] = 'Account'
         context['user'] = User.objects.get(username=self.request.user)
         context['orders'] = context['user'].order_set.all().order_by('-time_create')
+        context['user_form'] = UpdateUserForm(instance=self.request.user)
 
         liked_id = self.request.session.get('favorites')
         if liked_id:
@@ -137,9 +138,17 @@ class AccountView(TemplateView):
         else:
             context['liked'] = False
 
-
-
         return context
+
+    def post(self, request):
+        form = UpdateUserForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+        else:
+            print('DEGENERAT')
+
+        return redirect(request.path)
+
 
 
 class CartView(TemplateView):
@@ -162,6 +171,7 @@ class CartView(TemplateView):
             context['items'] = False
 
         return context
+
 
 
 class CheckoutView(TemplateView):
