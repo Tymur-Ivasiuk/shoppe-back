@@ -8,7 +8,7 @@
 
 {% block header %}
 <header class="header">
-    <div class="header-wrapper">
+    <div class="header-wrapper header-border">
         <div class="header-logo">
             <a href="{% url 'home' %}" class="header-logo-link">
                 <h1 class="header-logo-link-title">
@@ -18,7 +18,7 @@
         </div>
         <div class="header-menu">
             <div class="header-menu-items">
-                <a href="{% url 'shop' %}" class="header-menu-link-text">
+                <a href="{% url 'shop' %}" class="header-menu-link-text flicking">
                     Shop
                 </a>
                 <a href="#!" class="header-menu-link-text">
@@ -33,7 +33,7 @@
                 <a href="#!" class="header-menu-link-icon">
                     <img src="{% static 'shop/img/svg/header/icon-search.svg' %}" alt="search">
                 </a>
-                <a href="#!" class="header-menu-link-icon">
+                <a href="{% url 'cart' %}" class="header-menu-link-icon">
                     <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
                 </a>
                 {% if request.user.is_authenticated %}
@@ -49,7 +49,7 @@
         </div>
     </div>
 </header>
-{% endblock header %}
+{% endblock %}
 
 {% block main %}
 <main class="main">

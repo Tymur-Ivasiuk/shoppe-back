@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.contrib.auth.models import User
-from phone_field import PhoneField
+from phonenumber_field.modelfields import PhoneNumberField
 
 from .validators import *
 
@@ -87,8 +87,13 @@ class Order(models.Model):
     ]
 
     status = models.CharField(max_length=255, choices=status_var, default='New')
-    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[validate_positive], default=0)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    shipping_price = models.DecimalField(max_digits=5, decimal_places=2, validators=[validate_positive], default=0)
+    sale = models.ForeignKey('Coupon', on_delete=models.PROTECT, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
+    payment_method = models.CharField(max_length=255)
+    payment_status = models.BooleanField(default=False)
+
+    time_create = models.DateTimeField(auto_now_add=True)
 
     #address
     first_name = models.CharField(max_length=255)
@@ -98,14 +103,31 @@ class Order(models.Model):
     street = models.CharField(max_length=255)
     postcode = models.PositiveSmallIntegerField()
     town = models.CharField(max_length=255)
-    phone = PhoneField()
+    phone = PhoneNumberField()
     email = models.EmailField()
 
     order_notes = models.TextField(blank=True)
 
     def __str__(self):
-        return self.id
+        return str(self.id)
+
+    def get_absolute_url(self):
+        return reverse('order', kwargs={'order_id': self.id})
 
 class OrderList(models.Model):
     order = models.ForeignKey('Order', on_delete=models.CASCADE)
     product = models.ForeignKey('Product', on_delete=models.PROTECT)
+    quantity = models.PositiveSmallIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[validate_positive], default=0)
+
+    def __str__(self):
+        return str(self.order)
+
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=25, unique=True)
+    sale_percent = models.PositiveSmallIntegerField(validators=[sale_validate])
+    max_uses = models.PositiveSmallIntegerField(default=1)
+
+    def __str__(self):
+        return self.code

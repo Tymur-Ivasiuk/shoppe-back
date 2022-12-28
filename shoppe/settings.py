@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     'shop.apps.ShopConfig',
     'adminsortable2',
     'django_filters',
-    'phone_field',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [

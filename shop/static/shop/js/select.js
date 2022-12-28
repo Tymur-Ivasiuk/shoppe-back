@@ -51,7 +51,11 @@ document.querySelectorAll('.checkbox').forEach(function (checkWrap) {
 	const inputCheckBack = checkWrap.querySelector('input[type=number]');
 
 	document.addEventListener("DOMContentLoaded", () => {
-		inputCheckBack.value = 0;
+		if (btnCheck.checked){
+			inputCheckBack.value = 1;
+		} else {
+			inputCheckBack.value = 0;
+		}
 	});
 
 	btnCheck.addEventListener('click', function() {

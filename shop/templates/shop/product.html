@@ -39,7 +39,7 @@
                 <a href="#!" class="header-menu-link-icon">
                     <img src="{% static 'shop/img/svg/header/icon-search.svg' %}" alt="search">
                 </a>
-                <a href="#!" class="header-menu-link-icon">
+                <a href="{% url 'cart' %}" class="header-menu-link-icon">
                     <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
                 </a>
                 {% if request.user.is_authenticated %}
@@ -55,7 +55,7 @@
         </div>
     </div>
 </header>
-{% endblock header %}
+{% endblock %}
 
 {% block main %}
 <main class="main">
@@ -133,34 +133,59 @@
                 {{ product.description|truncatechars:225 }}
             </p>
 
-            <div class="product-info_order">
-                {% if product.quantity %}
-                    <div class="product-info_order-amount">
-                        <input type="button" value="-" id="button_minus" class="disabled">
-                        <input type="number" step="1" min="1" max="{{ product.quantity }}" id="num_count" name="quantity" value="1" title="Qty" readonly="true">
-                        {% if product.quantity <= 1 %}
-                            <input type="button" value="+" id="button_plus" class="disabled">
-                        {% else %}
-                            <input type="button" value="+" id="button_plus">
-                        {% endif %}
+
+            {% if product.quantity %}
+                <form action="{% url 'add_cart' id=product.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="product-info_order">
+                        <input type="hidden" name="price" value="{{ product.price }}">
+                        <input type="hidden" name="url_from" value="{{ request.path }}">
+                        <div class="product-info_order-amount">
+                            <input type="button" value="-" id="button_minus" class="disabled">
+                            <input type="number" step="1" min="1" max="{{ product.quantity }}" id="num_count" name="quantity" value="1" title="Qty" readonly="true">
+                            {% if product.quantity <= 1 %}
+                                <input type="button" value="+" id="button_plus" class="disabled">
+                            {% else %}
+                                <input type="button" value="+" id="button_plus">
+                            {% endif %}
+                        </div>
+                        <div class="product-info_order-button-cart">
+                            <button class="product-info_order-button-cart-text" id="add">
+                                ADD TO CART
+                            </button>
+                        </div>
                     </div>
-                    <div class="product-info_order-button-cart">
-                        <button class="product-info_order-button-cart-text" id="add">
-                            ADD TO CART
-                        </button>
-                    </div>
-                {% else %}
+                </form>
+
+            {% else %}
+                <div class="product-info_order">
                     <div class="product-info_not-available">
                         Not available
                     </div>
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
 
             <div class="product-info_buttons">
-                <button class="product-info_buttons-like" id="button_like">
-                    <img src="{% static 'shop/img/svg/main/product_icons/like-off-icon.svg' %}" alt="like-off" class="like-icon active" id="like_icon-off">
-                    <img src="{% static 'shop/img/svg/main/product_icons/like-on-icon.svg' %}" alt="like-on" class="like-icon" id="like_icon-on">
-                </button>
+
+                {% if product.id|stringformat:"i" in request.session.favorites %}
+                    <form action="{% url 'remove_fav' id=product.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="url_from" value="{{ request.path }}">
+                        <button class="product-info_buttons-like" id="button_like">
+                            <img src="{% static 'shop/img/svg/main/product_icons/like-on-icon.svg' %}" alt="like-on" class="like-icon active" id="like_icon-on">
+                        </button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'add_fav' id=product.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="url_from" value="{{ request.path }}">
+                        <button class="product-info_buttons-like" id="button_like">
+                            <img src="{% static 'shop/img/svg/main/product_icons/like-off-icon.svg' %}" alt="like-off" class="like-icon active" id="like_icon-off">
+                        </button>
+                    </form>
+                {% endif %}
+
+
 
                 <div class="product-info_buttons-links">
                     <a href="#!" class="product-info_buttons-link">
@@ -319,7 +344,6 @@
 
 {% block js_scripts %}
 <script src="{% static 'shop/js/quantity_product.js' %}"></script>
-<script src="{% static 'shop/js/like.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script src="{% static 'shop/js/slick.min.js' %}"></script>
 <script src="{% static 'shop/js/sliderProduct.js' %}"></script>

@@ -18,7 +18,7 @@
         </div>
         <div class="header-menu">
             <div class="header-menu-items">
-                <a href="{% url 'shop' %}" class="header-menu-link-text">
+                <a href="{% url 'shop' %}" class="header-menu-link-text flicking">
                     Shop
                 </a>
                 <a href="#!" class="header-menu-link-text">
@@ -33,15 +33,15 @@
                 <a href="#!" class="header-menu-link-icon">
                     <img src="{% static 'shop/img/svg/header/icon-search.svg' %}" alt="search">
                 </a>
-                <a href="#!" class="header-menu-link-icon">
+                <a href="{% url 'cart' %}" class="header-menu-link-icon">
                     <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
                 </a>
                 {% if request.user.is_authenticated %}
-                    <a href="{% url 'account' %}" class="header-menu-link-icon flicking">
+                    <a href="{% url 'account' %}" class="header-menu-link-icon">
                         <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
                     </a>
                 {% else %}
-                    <a href="{% url 'login' %}" class="header-menu-link-icon flicking">
+                    <a href="{% url 'login' %}" class="header-menu-link-icon">
                         <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
                     </a>
                 {% endif %}
@@ -49,7 +49,7 @@
         </div>
     </div>
 </header>
-{% endblock header %}
+{% endblock %}
 
 {% block main %}
 <main class="main">
@@ -75,7 +75,7 @@
 
         <div id="Orders" class="tabcontent">
             <!-- if nothing -->
-            {% if user.order_set.all %}
+            {% if orders %}
                 <table class="account-table">
                     <tbody>
                         <tr>
@@ -85,13 +85,13 @@
                             <th>TOTAL</th>
                             <th>ACTIONS</th>
                         </tr>
-                        {% for i in order_list.order_set.all %}
+                        {% for i in orders %}
                             <tr>
-                                <td>i.id</td>
-                                <td>October 8,2021</td>
-                                <td>i.status</td>
-                                <td>$ 105</td>
-                                <td><a href="#!" class="account-table-link">View Order</a></td>
+                                <td>{{i.id}}</td>
+                                <td>{{i.time_create|date:"j M, Y" }}</td>
+                                <td>{{i.status}}</td>
+                                <td>$ {{i.price}}</td>
+                                <td><a href="{{ i.get_absolute_url }}" class="account-table-link">View Order</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -109,42 +109,38 @@
         </div>
 
         <div id="Liked" class="tabcontent">
-            <div class="liked-items">
-                <div class="liked-item">
-                    <div class="item-pic-wrap">
-                        <img src="./img/jpg/product/image-test.jpg" alt="image" class="item-pic">
-                    </div>
-                    <div class="item-info">
-                        <div>
-                            <p>
-                                Lira Earrings
-                            </p>
-                            <p>
-                                $ 20,00
-                            </p>
+
+            {% if liked %}
+                <div class="liked-items">
+                {% for i in liked %}
+                    <div class="liked-item">
+                        <div class="item-pic-wrap">
+                            <img src="{{ i.photo_set.first.image.url }}" alt="image" class="item-pic">
                         </div>
-                        <a href="#!">View Product</a>
+                        <div class="item-info">
+                            <div>
+                                <p>
+                                    {{ i.title }}
+                                </p>
+                                <p>
+                                    $ {{ i.price }}
+                                </p>
+                            </div>
+                            <a href="{{ i.get_absolute_url }}">View Product</a>
+                        </div>
                     </div>
+                {% endfor %}
                 </div>
-
-<!--                <div class="liked-item">-->
-<!--                    <div class="item-pic-wrap">-->
-<!--                        <img src="./img/jpg/product/image-test.jpg" alt="image" class="item-pic">-->
-<!--                    </div>-->
-<!--                    <div class="item-info">-->
-<!--                        <div>-->
-<!--                            <p>-->
-<!--                                Lira Earrings-->
-<!--                            </p>-->
-<!--                            <p>-->
-<!--                                $ 20,00-->
-<!--                            </p>-->
-<!--                        </div>-->
-<!--                        <a href="#!">View Product</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-
-            </div>
+            {% else %}
+                <div class="account-message">
+                    <p class="account-message-text">
+                        You don't have any products you like
+                    </p>
+                    <a href="{% url 'shop' %}" class="account-message-link">
+                        BROWSE PRODUCT
+                    </a>
+                </div>
+            {% endif %}
         </div>
 
         <div id="Account details" class="tabcontent">

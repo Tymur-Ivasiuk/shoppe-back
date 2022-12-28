@@ -42,6 +42,5 @@ class ProductFilter(django_filters.FilterSet):
         model = Product
         fields = [
             'title',
-            #'on_sale' in future
             'quantity',
         ]

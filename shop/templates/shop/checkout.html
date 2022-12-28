@@ -1,0 +1,266 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% load shop_tags %}
+
+{% block css_styles %}
+<link type="text/css" href="{% static 'shop/css/styles.css' %}" rel="stylesheet">
+<link type="text/css" href="{% static 'shop/css/checkout.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block header %}
+<header class="header">
+    <div class="header-wrapper header-border">
+        <div class="header-logo">
+            <a href="{% url 'home' %}" class="header-logo-link">
+                <h1 class="header-logo-link-title">
+                    SHOPPE
+                </h1>
+            </a>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-items">
+                <a href="{% url 'shop' %}" class="header-menu-link-text flicking">
+                    Shop
+                </a>
+                <a href="#!" class="header-menu-link-text">
+                    Blog
+                </a>
+                <a href="#!" class="header-menu-link-text">
+                    Our Story
+                </a>
+            </div>
+            |
+            <div class="header-menu-items">
+                <a href="#!" class="header-menu-link-icon">
+                    <img src="{% static 'shop/img/svg/header/icon-search.svg' %}" alt="search">
+                </a>
+                <a href="{% url 'cart' %}" class="header-menu-link-icon">
+                    <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
+                </a>
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'account' %}" class="header-menu-link-icon">
+                        <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="header-menu-link-icon">
+                        <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+{% block main %}
+<main class="main">
+    <h1 class="checkout-title">
+        Checkout
+    </h1>
+
+    {% if request.session.cart %}
+        <div class="checkout-q">
+            {% if request.user.is_authenticated %}
+                <p>
+                    Hi, {{request.user.first_name}}! Please check your order
+                </p>
+            {% else %}
+                <p>
+                    Returning customer? <a href="{% url 'login' %}">Click here to login</a>
+                </p>
+            {% endif %}
+        </div>
+
+        {% if request.session|get_item:"cart"|get_item:"sale"|get_item:"sale" %}
+            <div class="coupon_have">
+                <span>{{request.session.cart.sale|get_item:"sale"}}%</span> discount coupon used!
+            </div>
+        {% else %}
+            <p class="coupon-p">Have a coupon?</p>
+            <form action="{% url 'sale_cart' %}" class="checkot-coupon_form" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="url_from" value="{{request.path}}">
+                <P>If you have a coupon code, please apply it below.</P>
+                <div class="input-wrap">
+                    <div>
+                        <input type="text" name="sale_code" class="checkot-coupon_input" placeholder="Coupon Code" required>
+                        <button type="submit">
+                            APPLY COUPON
+                        </button>
+                    </div>
+                    {% if request.session.cart|get_item:"sale" == "max" %}
+                        <div class="form-errors">
+                            Coupon used too much
+                        </div>
+                    {% elif request.session.cart|get_item:"sale" == "nothing" %}
+                        <div class="form-errors">
+                            Coupon not found
+                        </div>
+                    {% endif %}
+                </div>
+            </form>
+        {% endif %}
+
+
+        <form action="{% url 'create_order' %}" class="checkout-info_wrap" method="POST">
+            {% csrf_token %}
+            <div class="billing">
+                <h2 class="info-title">
+                    Billing Details
+                </h2>
+                <div class="billing-form">
+                    <div>
+                        <div class="input-wrap">
+                            {{ order_form.first_name }}
+                        </div>
+                        <div class="input-wrap">
+                            {{ order_form.last_name }}
+                        </div>
+                        <!-- <div class="form-errors">
+                            Введенные пароли не совпадают.
+                        </div> -->
+                    </div>
+                    <div class="input-wrap">
+                        {{ order_form.company_name }}
+                    </div>
+                    <div class="input-wrap">
+                        {{ order_form.country }}
+                    </div>
+                    <div class="input-wrap">
+                        {{ order_form.street }}
+                    </div>
+                    <div class="input-wrap">
+                        {{ order_form.postcode }}
+                    </div>
+                    <div class="input-wrap">
+                        {{ order_form.town }}
+                    </div>
+                    <div class="input-wrap">
+                        {{ order_form.phone }}
+                    </div>
+                    <div class="input-wrap">
+                        {{ order_form.email }}
+                    </div>
+                    <div class="input-wrap">
+                        {{ order_form.order_notes }}
+                    </div>
+
+                </div>
+            </div>
+            <div class="order">
+                <h2 class="info-title">
+                    YOUR ORDER
+                </h2>
+                <div class="order-summary-info">
+                    <div class="order-summary-info_header">
+                        <div>
+                            PRODUCT
+                        </div>
+                        <div>
+                            TOTAL
+                        </div>
+                    </div>
+                    <div class="order-summary-info_body">
+                        {% for i in items %}
+                            <div class="order-summary-info_row">
+                                <div>
+                                    {{ i.title }}
+                                </div>
+                                <div>
+                                    $ {{ request.session.cart.items|get_item:i.id|item_sum }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="order-summary-info_last-items">
+                        <div class="order-summary-last-items-info_row">
+                            <div>
+                                SUBTOTAL
+                            </div>
+                            <div>
+                                $ {{ request.session.cart.items|sum_subtotal }}
+                            </div>
+                        </div>
+                        {% if request.session.cart|get_item:'sale' %}
+                            <div class="order-summary-last-items-info_row">
+                                <div>
+                                    SALE (-{{request.session.cart.sale.sale}}%)
+                                </div>
+                                <div style="color: rgb(210, 0, 0);">
+                                    - $ {{ request.session.cart.items|sum_subtotal|sale:request.session.cart.sale.sale}}
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div class="order-summary-last-items-info_row">
+                            <div>
+                                SHIPPING
+                            </div>
+                            <div>
+                                $ 10
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-summary-info_footer">
+                        <div class="order-summary-info_footer-row">
+                            <div>
+                                TOTAL
+                            </div>
+                            {% if request.session.cart|get_item:'sale' %}
+                                <div>
+                                    $ {{ request.session.cart.items|sum_subtotal|with_sale:request.session.cart.sale.sale|add:"10" }}
+                                </div>
+                            {% else %}
+                                 <div>
+                                    $ {{ request.session.cart.items|sum_subtotal|add:"10" }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="order-payment">
+                        <label class="custom-radio-btn">
+                            <span class="label">Direct bank transfer</span>
+                            <input type="radio" name="sample" checked>
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label class="custom-radio-btn">
+                            <span class="label">Check payments</span>
+                            <input type="radio" name="sample">
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label class="custom-radio-btn">
+                            <span class="label">Cash on delivery</span>
+                            <input type="radio" name="sample">
+                            <span class="checkmark"></span>
+                        </label>
+
+                        <label class="custom-radio-btn">
+                            <span class="label">PayPal </span>
+                            <input type="radio" name="sample">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+
+                    <button type="submit">
+                        PLACE ORDER
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    {% else %}
+        <div class="checkout-nothing">
+            <p class="checkout-nothing-text">
+                Your shopping cart is empty. Try to choose something
+            </p>
+            <a href="/index.html" class="checkout-nothing-link">
+                <div class="checkout-nothing-link-button">
+                    FILL THE CART
+                </div>
+            </a>
+        </div>
+    {% endif %}
+</main>
+{% endblock %}

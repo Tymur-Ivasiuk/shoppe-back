@@ -30,19 +30,31 @@ class Shop(ListView):
     template_name = 'shop/shop.html'
     context_object_name = 'products_list'
 
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Shop'
         context['form'] = self.filterset.form
-        context['form_select'] = [(x.id, x.name) for x in Category.objects.all()]
+        context['form_select'] = {str(x.id): x.name for x in Category.objects.all()}
+        context['ordering'] = {
+            '-time_create': 'First new',
+            'title': 'A -> Z',
+            '-title': 'Z -> A',
+            'sku': 'SKU',
+            'price': 'Price: Low-High',
+            '-price': 'Price: High-Low'
+        }
+        if self.request.GET:
+            print(self.request.GET)
+        context['get_items'] = self.request.GET
         return context
 
     def get_queryset(self):
         queryset = Product.objects.all().prefetch_related(
             Prefetch('photo_set', queryset=Photo.objects.filter(index=1))
         ).order_by('-time_create')
-        if self.request.GET.get('order-by'):
-            queryset = queryset.order_by(self.request.GET.get('order-by'))
+        if self.request.GET.get('order_by'):
+            queryset = queryset.order_by(self.request.GET.get('order_by'))
 
         self.filterset = ProductFilter(self.request.GET, queryset=queryset)
 
@@ -60,11 +72,12 @@ class ProductView(DetailView):
         context['title'] = context['product']
 
         context['review_form'] = ReviewForm()
-        context['avg_star'] = round(Review.objects.filter(product=self.kwargs['product_id']).aggregate(Avg('star_rating')).get('star_rating__avg'))
+        stars_set = Review.objects.filter(product=self.kwargs['product_id']).aggregate(Avg('star_rating')).get('star_rating__avg')
+        context['avg_star'] = round(stars_set) if stars_set else 0
 
         context['similar'] = Product.objects.filter(category=context['object'].category).exclude(id=self.kwargs['product_id']).prefetch_related(
-            Prefetch('photo_set', queryset=Photo.objects.filter(index=1))[:3]
-        ).order_by('-time_create')
+            Prefetch('photo_set', queryset=Photo.objects.filter(index=1))
+        ).order_by('-time_create')[:3]
 
         return context
 
@@ -115,6 +128,110 @@ class AccountView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Account'
         context['user'] = User.objects.get(username=self.request.user)
+        context['orders'] = context['user'].order_set.all().order_by('-time_create')
+
+        liked_id = self.request.session.get('favorites')
+        if liked_id:
+            liked_id = [int(x) for x in liked_id]
+            context['liked'] = Product.objects.filter(id__in=liked_id)
+        else:
+            context['liked'] = False
+
+
+
+        return context
+
+
+class CartView(TemplateView):
+    template_name = 'shop/cart.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Cart'
+        try:
+            cart_id = self.request.session.get('cart').get('items')
+        except:
+            cart_id = False
+
+        if cart_id:
+            cart_id = [int(x) for x in cart_id]
+            context['items'] = Product.objects.filter(id__in=cart_id).prefetch_related(
+                Prefetch('photo_set', queryset=Photo.objects.filter(index=1))
+            )
+        else:
+            context['items'] = False
+
+        return context
+
+
+class CheckoutView(TemplateView):
+    template_name = 'shop/checkout.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Checkout'
+        context['order_form'] = OrderForm()
+
+        items = [int(x) for x in self.request.session.get('cart').get('items').keys()]
+        context['items'] = Product.objects.filter(id__in=items)
+
+        return context
+
+
+def create_order(request):
+    if request.method == 'POST':
+        shipping_price = 10
+
+        sale_id = request.session['cart']['sale'].get('id') if request.session['cart']['sale'] else None
+        sale = Coupon.objects.get(id=sale_id) if sale_id else None
+
+        user_id = request.user.id if request.user.is_authenticated else None
+        user = User.objects.get(id=user_id) if user_id else None
+
+        order = Order.objects.create(
+            first_name = request.POST.get('first_name'),
+            last_name = request.POST.get('last_name'),
+            company_name = request.POST.get('company_name'),
+            country = request.POST.get('country'),
+            town = request.POST.get('town'),
+            street = request.POST.get('street'),
+            postcode = request.POST.get('postcode'),
+            phone = request.POST.get('phone'),
+            email = request.POST.get('email'),
+            order_notes = request.POST.get('order_notes'),
+
+            sale = sale,
+            user = user,
+            shipping_price = shipping_price
+        )
+        product_list = Product.objects.filter(id__in=[int(x) for x in request.session['cart']['items'].keys()])
+        for i in product_list:
+            OrderList.objects.create(
+                order=order,
+                product=i,
+                quantity=request.session['cart']['items'][str(i.id)]['quantity'],
+                price=request.session['cart']['items'][str(i.id)]['price']
+            )
+
+        del request.session['cart']
+        request.session.modified = True
+        print(request.COOKIES)
+
+    return redirect('order', order_id=order.id)
+
+
+class OrderView(DetailView):
+    template_name = 'shop/order.html'
+    model = Order
+    pk_url_kwarg = 'order_id'
+    context_object_name = 'order'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Order - {context["order"]}'
+
+        return context
+
 
 
 
@@ -122,6 +239,98 @@ class AccountView(TemplateView):
 def logout_user(request):
     logout(request)
     return redirect('home')
+
+
+
+def add_to_favorites(request, id):
+    if request.method == 'POST':
+        if not request.session.get('favorites'):
+            request.session['favorites'] = list()
+        else:
+            request.session['favorites'] = list(request.session['favorites'])
+
+        if not id in request.session['favorites']:
+            request.session['favorites'].append(id)
+            request.session.modified = True
+
+    return redirect(request.POST.get('url_from'))
+
+
+def remove_from_favorites(request, id):
+    if request.method == 'POST':
+        while str(id) in request.session['favorites']:
+            request.session['favorites'].remove(str(id))
+            request.session.modified = True
+
+        if not request.session['favorites']:
+            del request.session['favorites']
+    return redirect(request.POST.get('url_from'))
+
+
+
+
+
+#cart
+def add_to_cart(request, id):
+    if request.method == 'POST':
+        print(request.POST)
+        if not request.session.get('cart'):
+            request.session['cart'] = dict()
+            request.session['cart']['items'] = dict()
+
+        else:
+            request.session['cart']['items'] = dict(request.session['cart'].get('items'))
+
+        if request.session['cart']['items'].get(id):
+            if int(request.POST.get('quantity')) != 0:
+                request.session['cart']['items'][id]['quantity'] = int(request.POST.get('quantity'))
+            else:
+                del request.session['cart']['items'][id]
+        else:
+            data = {
+                'quantity': int(request.POST.get('quantity')),
+                'price': float(request.POST.get('price').replace(',', '.')),
+            }
+            request.session['cart']['items'][id] = data
+
+        request.session.modified = True
+        return redirect(request.POST.get('url_from'))
+
+
+
+def remove_from_cart(request, id):
+    if request.method == 'POST':
+        del request.session['cart']['items'][id]
+        request.session.modified = True
+    return redirect(request.POST.get('url_from'))
+
+def clear_cart(request):
+    if request.method == 'POST':
+        del request.session['cart']
+    return redirect(request.POST.get('url_from'))
+
+def sale_cart(request):
+    if request.method == 'POST':
+        try:
+            coupon = Coupon.objects.get(code=request.POST.get('sale_code'))
+        except:
+            coupon = False
+
+        if coupon:
+            print(coupon.order_set.count())
+            if coupon.order_set.count() < coupon.max_uses:
+                data = {
+                    'id': coupon.id,
+                    'code': coupon.code,
+                    'sale': coupon.sale_percent
+                }
+                request.session['cart']['sale'] = data
+            else:
+                request.session['cart']['sale'] = 'max'
+        else:
+            request.session['cart']['sale'] = 'nothing'
+        request.session.modified = True
+    return redirect(request.POST.get('url_from'))
 
 def pageNotFound(request, exception):
     return render(request, 'shop/error.html', {'title': 'Страница не найдена'})

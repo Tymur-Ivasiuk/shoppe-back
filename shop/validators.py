@@ -9,3 +9,7 @@ def starValid(value):
 def validate_positive(value):
     if value < 0:
         raise ValidationError(_('%(value) is not positive'), params={'value': value})
+
+def sale_validate(value):
+    if value > 100:
+        raise ValidationError(_('%(value) cannot be more than 100'), params={'value': value})

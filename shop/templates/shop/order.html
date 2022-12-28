@@ -1,0 +1,219 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% load shop_tags %}
+
+{% block css_styles %}
+<link type="text/css" href="{% static 'shop/css/styles.css' %}" rel="stylesheet">
+<link type="text/css" href="{% static 'shop/css/order.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block header %}
+<header class="header">
+    <div class="header-wrapper header-border">
+        <div class="header-logo">
+            <a href="{% url 'home' %}" class="header-logo-link">
+                <h1 class="header-logo-link-title">
+                    SHOPPE
+                </h1>
+            </a>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-items">
+                <a href="{% url 'shop' %}" class="header-menu-link-text flicking">
+                    Shop
+                </a>
+                <a href="#!" class="header-menu-link-text">
+                    Blog
+                </a>
+                <a href="#!" class="header-menu-link-text">
+                    Our Story
+                </a>
+            </div>
+            |
+            <div class="header-menu-items">
+                <a href="#!" class="header-menu-link-icon">
+                    <img src="{% static 'shop/img/svg/header/icon-search.svg' %}" alt="search">
+                </a>
+                <a href="{% url 'cart' %}" class="header-menu-link-icon">
+                    <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
+                </a>
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'account' %}" class="header-menu-link-icon">
+                        <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="header-menu-link-icon">
+                        <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+{% block main %}
+<main class="main">
+<section class="messages">
+    <div class="added-cart message active-msg" id="yes-msg">
+        <div class="first-added">
+            <img src="{% static 'shop/img/svg/main/messages/yes-icon.svg' %}" alt="yes" class="added-icon-message">
+            <p class="added-cart-message-text">
+                We’ve received your order
+            </p>
+        </div>
+    </div>
+</section>
+<div class="order-wrap">
+    <div class="order-details">
+        <h2 class="order-title">
+            Order Details
+        </h2>
+        <div class="order-details-wrap">
+            <div class="order-details-info">
+                <div class="order-details-info-wrap">
+                    <div class="order-details-info-title">
+                        ORDER NUMBER
+                    </div>
+                    <div class="order-details-info-desc">
+                        {{ order.id }}
+                    </div>
+                </div>
+                <div class="order-details-info-wrap">
+                    <div class="order-details-info-title">
+                        EMAIL
+                    </div>
+                    <div class="order-details-info-desc">
+                        {{ order.email }}
+                    </div>
+                </div>
+                <div class="order-details-info-wrap">
+                    <div class="order-details-info-title">
+                        CONTACT NUMBER
+                    </div>
+                    <div class="order-details-info-desc">
+                        {{ order.phone }}
+                    </div>
+                </div>
+                <div class="order-details-info-wrap">
+                    <div class="order-details-info-title">
+                        ORDER DATE
+                    </div>
+                    <div class="order-details-info-desc">
+                        {{ order.time_create }}
+                    </div>
+                </div>
+            </div>
+            <div class="order-details-info">
+                <div class="order-details-info-wrap">
+                    <div class="order-details-info-title">
+                        ORDER STATUS
+                    </div>
+                    <div class="order-details-info-desc">
+                        {{ order.status }}
+                    </div>
+                </div>
+                <div class="order-details-info-wrap">
+                    <div class="order-details-info-title">
+                        DELIVERY OPTIONS
+                    </div>
+                    <div class="order-details-info-desc">
+                        Standard delivery
+                    </div>
+                </div>
+                <div class="order-details-info-wrap">
+                    <div class="order-details-info-title">
+                        DELIVERY ADDRESS
+                    </div>
+                    <div class="order-details-info-desc">
+                        {{order.country}} {{order.street}} {{order.postcode}} {{order.town}}
+                    </div>
+                </div>
+                <div class="order-details-info-wrap">
+                    <div class="order-details-info-title">
+                        PAYMENT
+                    </div>
+                    <div class="order-details-info-desc">
+                        {% if order.payment_status %}
+                            <i class="fa-sharp fa-solid fa-circle-check"></i> {{ order.payment_method }}
+                        {% else %}
+                            <i class="fa-solid fa-circle-xmark"></i> {{ order.payment_method }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="order-summary">
+        <h2 class="order-title">
+            Order Summary
+        </h2>
+        <div class="order-summary-info">
+            <div class="order-summary-info_header">
+                <div>
+                    PRODUCT
+                </div>
+                <div>
+                    TOTAL
+                </div>
+            </div>
+            <div class="order-summary-info_body">
+                {% for i in order.orderlist_set.all %}
+                    <div class="order-summary-info_row">
+                        <div>
+                            {{ i.product.title }}
+                        </div>
+                        <div>
+                             {{i.quantity}} x $ {{ i.price }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="order-summary-info_last-items">
+                <div class="order-summary-last-items-info_row">
+                    <div>
+                        SUBTOTAL
+                    </div>
+                    <div>
+                        $ {{ order.orderlist_set.all|sum_subtotal }}
+                    </div>
+                </div>
+                {% if order.sale %}
+                    <div class="order-summary-last-items-info_row">
+                        <div>
+                            SALE (-{{order.sale.sale_percent}}%)
+                        </div>
+                        <div style="color: rgb(210, 0, 0);">
+                            - $ {{ order.orderlist_set.all|sum_subtotal|sale:order.sale.sale_percent}}
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="order-summary-last-items-info_row">
+                    <div>
+                        SHIPPING
+                    </div>
+                    <div>
+                        $ {{ order.shipping_price }}
+                    </div>
+                </div>
+            </div>
+            <div class="order-summary-info_footer">
+                <div class="order-summary-info_footer-row">
+                    <div>
+                        TOTAL
+                    </div>
+                    <div>
+                        $ {{ order.orderlist_set.all|sum_subtotal|with_sale:order.sale.sale_percent|add:order.shipping_price }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+{% endblock %}
+
+{% block js_scripts %}
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="{% static 'shop/js/messageOrder.js' %}"></script>
+{% endblock %}

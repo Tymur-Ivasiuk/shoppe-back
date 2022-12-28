@@ -20,6 +20,19 @@ class ProductAdmin(SortableAdminBase, admin.ModelAdmin):
         PhotoInlines,
     ]
 
+
+class OrderListInline(admin.TabularInline):
+    model = OrderList
+    extra = 0
+
+class OrderAdmin(admin.ModelAdmin):
+
+    inlines = [
+        OrderListInline
+    ]
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category)
 admin.site.register(Attribute)
+admin.site.register(Coupon)
+admin.site.register(Order, OrderAdmin)

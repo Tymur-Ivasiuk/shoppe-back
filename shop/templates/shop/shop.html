@@ -1,5 +1,6 @@
 {% extends 'shop/base.html' %}
 {% load static %}
+{% load shop_tags %}
 
 {% block css_styles %}
 <link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
@@ -33,7 +34,7 @@
                 <a href="#!" class="header-menu-link-icon">
                     <img src="{% static 'shop/img/svg/header/icon-search.svg' %}" alt="search">
                 </a>
-                <a href="#!" class="header-menu-link-icon">
+                <a href="{% url 'cart' %}" class="header-menu-link-icon">
                     <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
                 </a>
                 {% if request.user.is_authenticated %}
@@ -49,7 +50,7 @@
         </div>
     </div>
 </header>
-{% endblock header %}
+{% endblock %}
 
 {% block main %}
 <main class="main">
@@ -70,35 +71,41 @@
             <div class="filter-buttons">
                 <div class="select">
                     <button type="button" class="select_header" readonly="true">
-                        <div class="select_current">Category</div>
+                        {% if get_items.category %}
+                            <div class="select_current">{{form_select|get_item:get_items.category}}</div>
+                        {% else %}
+                            <div class="select_current">Category</div>
+                        {% endif %}
                     </button>
 
                     <ol class="select_list">
                         <li class="select_item" data-value="">-------------</li>
-                        {% for d in form_select %}
+
+                        {% for d in form_select.items %}
                             <li class="select_item" data-value="{{ d.0 }}">{{ d.1 }}</li>
                         {% endfor %}
 
 
                     </ol>
 
-                    <input type="text" name="category" value="" class="select_input-hidden">
+                    <input type="text" name="category" value="{{get_items.category}}" class="select_input-hidden">
                 </div>
 
                 <div class="select">
                     <button type="button" class="select_header" readonly="true">
-                        <div class="select_current">Sort by</div>
+                        {% if get_items.order_by %}
+                            <div class="select_current">{{ ordering|get_item:get_items.order_by }}</div>
+                        {% else %}
+                            <div class="select_current">Sort by</div>
+                        {% endif %}
                     </button>
 
                     <ol class="select_list">
-                        <li class="select_item" data-value="-time_create">First new</li>
-                        <li class="select_item" data-value="title">A -> Z</li>
-                        <li class="select_item" data-value="-title">Z -> A</li>
-                        <li class="select_item" data-value="sku">SKU</li>
-                        <li class="select_item" data-value="price">Price: Low-High</li>
-                        <li class="select_item" data-value="-price">Price: High-Low</li>
+                        {% for i in ordering.items %}
+                            <li class="select_item" data-value="{{i.0}}">{{i.1}}</li>
+                        {% endfor %}
                     </ol>
-                    <input type="text" name="order-by" value="" class="select_input-hidden">
+                    <input type="text" name="order_by" value="{{get_items.order_by}}" class="select_input-hidden">
                 </div>
 
                 <div class="double-range_wrapper">
@@ -115,18 +122,16 @@
                     </div>
                 </div>
 
-<!--                <div class="checkbox">-->
-<!--                    <span class="checkbox-text">On sale</span>-->
-<!--                    <label class="switch">-->
-<!--                        <input type="checkbox" name="on-sale">-->
-<!--                        <span class="checkbox-switch round"></span>-->
-<!--                    </label>-->
-<!--                </div>-->
                 <div class="checkbox">
                     <span class="checkbox-text">In stock</span>
                     <label class="switch">
-                        <input type="checkbox">
-                        <span class="checkbox-switch round"></span>
+                        {% if get_items.in_stock == '1' %}
+                            <input type="checkbox" checked>
+                            <span class="checkbox-switch round"></span>
+                        {% else %}
+                            <input type="checkbox">
+                            <span class="checkbox-switch round"></span>
+                        {% endif %}
                     </label>
                     {{ form.in_stock }}
                 </div>
