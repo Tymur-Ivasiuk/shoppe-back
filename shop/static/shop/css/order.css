@@ -146,3 +146,45 @@
 .added-icon-message {
     margin-right: 16px;
 }
+
+
+/* order-nothing STYLES */
+.order-nothing {
+    text-align: center;
+    align-items: center;
+    max-width: 436px;
+    margin: 210px auto 0 auto;
+}
+
+.order-nothing-title {
+    font-weight: 500;
+    font-size: 33px;
+    line-height: 43px;
+}
+.order-nothing-text {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 26px;
+    color: #707070;
+    margin-bottom: 40px;
+}
+
+.order-nothing-link {
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 21px;
+    color: #000000;
+}
+.order-nothing-link-button {
+    max-width: 190px;
+    padding: 16px 49px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    transition: 0.2s ease;
+    margin: 0 auto;
+}
+.order-nothing-link-button:hover {
+    background-color: #000;
+    color: #ffffff;
+}

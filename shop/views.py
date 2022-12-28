@@ -182,7 +182,7 @@ def create_order(request):
     if request.method == 'POST':
         shipping_price = 10
 
-        sale_id = request.session['cart']['sale'].get('id') if request.session['cart']['sale'] else None
+        sale_id = request.session['cart']['sale'].get('id') if request.session['cart'].get('sale') else None
         sale = Coupon.objects.get(id=sale_id) if sale_id else None
 
         user_id = request.user.id if request.user.is_authenticated else None
@@ -213,11 +213,20 @@ def create_order(request):
                 price=request.session['cart']['items'][str(i.id)]['price']
             )
 
+        response = redirect('order', order_id=order.id)
+
+        if not request.user.is_authenticated:
+            if not request.COOKIES.get('orders_can_view'):
+                response.set_cookie('orders_can_view', [order.id])
+            else:
+                list_orders = [int(x) for x in request.COOKIES.get('orders_can_view').strip('][').split(',')]
+                list_orders.append(order.id)
+                response.set_cookie('orders_can_view', list_orders)
+
         del request.session['cart']
         request.session.modified = True
-        print(request.COOKIES)
 
-    return redirect('order', order_id=order.id)
+    return response
 
 
 class OrderView(DetailView):
@@ -230,6 +239,22 @@ class OrderView(DetailView):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Order - {context["order"]}'
 
+
+        context['can_view'] = False
+        print(self.request.COOKIES)
+
+        if self.request.COOKIES.get('orders_can_view'):
+            list_orders = [int(x) for x in self.request.COOKIES.get('orders_can_view').strip('][').split(',')]
+            print(list_orders, context['order'].id)
+            if context['order'].id in list_orders:
+                context['can_view'] = True
+
+        if self.request.user.is_authenticated:
+            print(self.request.user.id)
+            if context['order'].user and self.request.user.id == context['order'].user.id:
+                context['can_view'] = True
+
+        print(context)
         return context
 
 

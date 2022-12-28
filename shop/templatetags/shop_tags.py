@@ -12,8 +12,6 @@ def range_list_minus(number):
 @register.filter
 def get_item(dictionary, value):
     try:
-        print(value)
-        print(dictionary.get(str(value)))
         return dictionary.get(str(value)) if dictionary.get(str(value)) else {}
     except:
         return {}
