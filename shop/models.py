@@ -13,6 +13,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email_verify = models.BooleanField(default=False)
     auth_token = models.CharField(max_length=255, unique=True)
+    user_json = models.JSONField(null=False, default={})
 
     def __str__(self):
         return self.user.username

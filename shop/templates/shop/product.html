@@ -165,7 +165,7 @@
             <div class="product-info_buttons">
 
                 {% if request.user.is_authenticated %}
-                    {% if product.id|stringformat:"i" in request.COOKIES|get_item:'liked' %}
+                    {% if product.id in request.user.profile.user_json|get_item:'liked' %}
                         <form action="{% url 'remove_fav' id=product.id %}" method="post">
                             {% csrf_token %}
                             <input type="hidden" name="url_from" value="{{ request.path }}">

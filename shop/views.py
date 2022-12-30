@@ -197,9 +197,13 @@ class AccountView(TemplateView):
         context['orders'] = context['user'].order_set.all().prefetch_related('orderlist_set').order_by('-time_create')
         context['user_form'] = UpdateUserForm(instance=self.request.user)
 
-        liked_id = self.request.session.get('favorites')
+        if self.request.user.is_authenticated:
+            liked_id = self.request.user.profile.user_json.get('liked')
+        else:
+            liked_id = self.request.COOKIES.get('liked')
+            liked_id = [int(x) for x in liked_id.strip('][').split(',')]
+
         if liked_id:
-            liked_id = [int(x) for x in liked_id]
             context['liked'] = Product.objects.filter(id__in=liked_id)
         else:
             context['liked'] = False
@@ -371,8 +375,6 @@ class ContactView(FormView):
             message = f'{form.cleaned_data["message"]}\n\nUser: {form.cleaned_data["first_name"]} {form.cleaned_data["last_name"]} \n\nEMAIL from : {form.cleaned_data["email"]}'
             mail_admins(subject=subject, message=message)
             messages.success(request, 'Your email has been sent to the site administrator. Thanks for the feedback')
-            # except:
-            #     messages.error(request, 'Your email has not been sent. Something went wrong')
         return redirect(request.path)
 
 
@@ -382,36 +384,25 @@ def logout_user(request):
 
 @login_required(login_url='login')
 def add_to_favorites(request, id):
-    response = redirect('product_page', product_id=id)
+    profile = request.user.profile
 
-    liked = request.COOKIES.get('liked')
-    if liked:
-        liked = [int(x) for x in liked.strip('][').split(',')]
-        liked.append(id)
+    if profile.user_json.get('liked'):
+        profile.user_json['liked'].append(id)
     else:
-        liked = [id]
-    max_time = datetime.now() + timedelta(days=365)
-    expires = datetime.strftime(max_time, "%a, %d-%b-%Y %H:%M:%S GMT")
-    response.set_cookie('liked', liked, expires=expires)
-    return response
+        profile.user_json['liked'] = [id]
+    profile.save()
+
+    return redirect('product_page', product_id=id)
 
 
 def remove_from_favorites(request, id):
-    response = redirect('product_page', product_id=id)
+    profile = request.user.profile
 
-    liked = [int(x) for x in request.COOKIES.get('liked').strip('][').split(',')]
-    if id in liked:
-        liked.remove(id)
-        max_time = datetime.now() + timedelta(days=365)
-        expires = datetime.strftime(max_time, "%a, %d-%b-%Y %H:%M:%S GMT")
-        response.set_cookie('liked', liked, expires=expires)
+    if id in profile.user_json.get('liked'):
+        profile.user_json['liked'].remove(id)
+        profile.save()
 
-    if not liked:
-        response.delete_cookie('liked')
-
-    return response
-
-
+    return redirect('product_page', product_id=id)
 
 
 
