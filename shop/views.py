@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView, PasswordChangeDoneView, PasswordResetCompleteView, \
     PasswordResetConfirmView, PasswordResetDoneView, PasswordResetView
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, mail_admins
 from django.db.models import Prefetch, Avg
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -352,6 +352,22 @@ class OrderView(DetailView):
                 context['can_view'] = True
 
         return context
+
+
+class ContactView(FormView):
+    template_name = 'shop/contact.html'
+    form_class = ContactForm
+
+    def post(self, request, *args, **kwargs):
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            message = f'{form.cleaned_data["message"]}\n\nUser: {form.cleaned_data["first_name"]} {form.cleaned_data["last_name"]} \n\nEMAIL from : {form.cleaned_data["email"]}'
+            mail_admins(subject=subject, message=message)
+            messages.success(request, 'Your email has been sent to the site administrator. Thanks for the feedback')
+            # except:
+            #     messages.error(request, 'Your email has not been sent. Something went wrong')
+        return redirect(request.path)
 
 
 def logout_user(request):

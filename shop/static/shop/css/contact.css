@@ -33,11 +33,13 @@
 .contact-form_block {
     width: 100%;
     display: flex;
-    gap: 116px;
+    flex-wrap: wrap;
+    column-gap: 100px;
     justify-content: space-between;
 }
 .contact-form_text {
     width: 100%;
+    flex: 1;
 
     margin-bottom: 94px;
 
@@ -55,70 +57,12 @@
     border-bottom: 1px solid #D8D8D8;;
 }
 
+@media (max-width: 500px) {
+    .contact-form_text {
+        flex: none;
+        margin-bottom: 30px;
+    }
 
-
-.select {
-    width: 100%;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 22px;
-    position: relative;
-}
-
-.select_header {
-    width: 100%;
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    background-color: #fff;
-    border: 0;
-    border-bottom: 1px solid #D8D8D8;
-    padding: 12px 0;
-    align-items: center;
-    cursor: pointer;
-    position: relative;
-}
-.select_current {
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 27px;
-}
-.select_header::after {
-    position: absolute;
-    content: url(../img/svg/select-icon.svg);
-    right: 15px;
-}
-
-
-.select_list {
-    display: none;
-
-    position: absolute;
-    width: 100%;
-    margin: 5px 0;
-    padding: 0;
-    list-style-type: none;
-    background: rgb(255, 255, 255);
-    z-index: 1;
-    border: 1px solid #D8D8D8;
-    border-radius: 4px;
-}
-.is-active {
-    display: block;
-}
-
-.select_item {
-    margin: 0;
-    padding: 0;
-    cursor: pointer;
-    padding: 10px 15px;
-    transition: .2s ease;
-}
-.select_item:hover {
-    background: #ccc;
-}
-.select_input-hidden {
-    display: none;
 }
 
 
@@ -135,4 +79,23 @@
 .contact-form_submit:hover, .contact-form_submit:focus, .contact-form_submit:active {
     background: #fff;
     color: #000;
+}
+
+.message-status {
+    border: 3px solid #EFEFEF;
+    border-radius: 3px;
+    padding: 16px 0;
+    margin-bottom: 60px;
+}
+.message-status p {
+    max-width: 80%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.error-message {
+    border-color: #fdd7d7;
+}
+.success-message {
+    border-color: #c6fbc1;
 }

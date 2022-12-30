@@ -1,0 +1,61 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block css_styles %}
+<link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
+<link rel="stylesheet" href="{% static 'shop/css/contact.css' %}">
+{% endblock %}
+
+
+{% block main %}
+<main class="main">
+    <div class="contact">
+        <h1 class="contact-title">
+            Contact Us
+        </h1>
+        <p class="contact-desc">
+            Say Hello send us your thoughts about our products or share your ideas with our Team!
+        </p>
+
+        {% if messages %}
+            {% for i in messages %}
+                {% if i.level == DEFAULT_MESSAGE_LEVEL.SUCCESS %}
+                    <div class="message-status success-message">
+                        <p>
+                            {{ i }}
+                        </p>
+                    </div>
+                {% elif i.level == DEFAULT_MESSAGE_LEVEL.ERROR %}
+                    <div class="message-status error-message">
+                        <p>
+                            {{ i }}
+                        </p>
+                    </div>
+                {% else %}
+                     <div class="message-status">
+                        <p>
+                            {{ i }}
+                        </p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <form class="contact-form" method="post">
+            {% csrf_token %}
+            <div class="contact-form_wrap-small">
+                <div class="contact-form_block">
+                    {{ form.first_name }}
+                    {{ form.last_name }}
+                </div>
+                <div class="contact-form_block">
+                    {{ form.email }}
+                    {{ form.subject }}
+                </div>
+            </div>
+            {{ form.message }}
+            <button type="submit" class="contact-form_submit">SEND</button>
+        </form>
+    </div>
+</main>
+{% endblock %}

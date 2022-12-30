@@ -123,6 +123,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+DEFAULT_FROM_EMAIL = "shoppetestemail@gmail.com"
+SERVER_EMAIL = "shoppetestemail@gmail.com"
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'shoppetestemail@gmail.com'
 EMAIL_HOST_PASSWORD = 'nqsqxuaxlgbmcarq'
+
+ADMINS = [('Shoppe Shoppe', 'shoppetestemail@gmail.com')]

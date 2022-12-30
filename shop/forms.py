@@ -160,3 +160,26 @@ class SetPassword(SetPasswordForm):
         widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Confirm password'}),
     )
 
+
+class ContactForm(forms.Form):
+    first_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'contact-form_text', 'placeholder': 'First name *'})
+    )
+    last_name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'contact-form_text', 'placeholder': 'Last name *'})
+    )
+    subject = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'contact-form_text', 'placeholder': 'Subject *'})
+    )
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'class': 'contact-form_text', 'placeholder': 'Email *'})
+    )
+    message = forms.CharField(
+        required=True,
+        widget=forms.Textarea(attrs={'class': 'contact-form_text', 'rows': '3', 'style': 'resize: none;', 'placeholder': 'Message'})
+    )
+
