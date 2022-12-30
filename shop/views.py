@@ -2,6 +2,7 @@ import uuid
 
 from django.contrib import messages
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, PasswordChangeDoneView, PasswordResetCompleteView, \
     PasswordResetConfirmView, PasswordResetDoneView, PasswordResetView
 from django.core.mail import EmailMessage, mail_admins
@@ -180,6 +181,8 @@ class LoginUser(LoginView):
             return redirect('login')
 
     def get_success_url(self):
+        if self.request.GET.get('next'):
+            return str(self.request.GET.get('next'))
         return reverse_lazy('account')
 
 
@@ -374,30 +377,32 @@ def logout_user(request):
     logout(request)
     return redirect('home')
 
-
+@login_required(login_url='login')
 def add_to_favorites(request, id):
-    if request.method == 'POST':
-        if not request.session.get('favorites'):
-            request.session['favorites'] = list()
-        else:
-            request.session['favorites'] = list(request.session['favorites'])
+    response = redirect('product_page', product_id=id)
 
-        if not id in request.session['favorites']:
-            request.session['favorites'].append(id)
-            request.session.modified = True
-
-    return redirect(request.POST.get('url_from'))
+    liked = request.COOKIES.get('liked')
+    if liked:
+        liked = [int(x) for x in liked.strip('][').split(',')]
+        liked.append(id)
+        response.set_cookie('liked', liked)
+    else:
+        response.set_cookie('liked', [int(id)])
+    return response
 
 
 def remove_from_favorites(request, id):
-    if request.method == 'POST':
-        while str(id) in request.session['favorites']:
-            request.session['favorites'].remove(str(id))
-            request.session.modified = True
+    response = redirect('product_page', product_id=id)
 
-        if not request.session['favorites']:
-            del request.session['favorites']
-    return redirect(request.POST.get('url_from'))
+    liked = [int(x) for x in request.COOKIES.get('liked').strip('][').split(',')]
+    if id in liked:
+        liked.remove(id)
+        response.set_cookie('liked', liked)
+
+    if not liked:
+        response.delete_cookie('liked')
+
+    return response
 
 
 

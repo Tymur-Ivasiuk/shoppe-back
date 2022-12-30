@@ -164,14 +164,24 @@
 
             <div class="product-info_buttons">
 
-                {% if product.id|stringformat:"i" in request.session.favorites %}
-                    <form action="{% url 'remove_fav' id=product.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="url_from" value="{{ request.path }}">
-                        <button class="product-info_buttons-like" id="button_like">
-                            <img src="{% static 'shop/img/svg/main/product_icons/like-on-icon.svg' %}" alt="like-on" class="like-icon active" id="like_icon-on">
-                        </button>
-                    </form>
+                {% if request.user.is_authenticated %}
+                    {% if product.id|stringformat:"i" in request.COOKIES|get_item:'liked' %}
+                        <form action="{% url 'remove_fav' id=product.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="url_from" value="{{ request.path }}">
+                            <button class="product-info_buttons-like" id="button_like">
+                                <img src="{% static 'shop/img/svg/main/product_icons/like-on-icon.svg' %}" alt="like-on" class="like-icon active" id="like_icon-on">
+                            </button>
+                        </form>
+                    {% else %}
+                        <form action="{% url 'add_fav' id=product.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="url_from" value="{{ request.path }}">
+                            <button class="product-info_buttons-like" id="button_like">
+                                <img src="{% static 'shop/img/svg/main/product_icons/like-off-icon.svg' %}" alt="like-off" class="like-icon active" id="like_icon-off">
+                            </button>
+                        </form>
+                    {% endif %}
                 {% else %}
                     <form action="{% url 'add_fav' id=product.id %}" method="post">
                         {% csrf_token %}
