@@ -1,4 +1,5 @@
 import uuid
+from datetime import *
 
 from django.contrib import messages
 from django.contrib.auth import logout
@@ -321,11 +322,13 @@ def create_order(request):
 
         if not request.user.is_authenticated:
             if not request.COOKIES.get('orders_can_view'):
-                response.set_cookie('orders_can_view', [order.id])
+                list_orders = [order.id]
             else:
                 list_orders = [int(x) for x in request.COOKIES.get('orders_can_view').strip('][').split(',')]
                 list_orders.append(order.id)
-                response.set_cookie('orders_can_view', list_orders)
+            max_time = datetime.now() + timedelta(days=365)
+            expires = datetime.strftime(max_time, "%a, %d-%b-%Y %H:%M:%S GMT")
+            response.set_cookie('orders_can_view', list_orders, expires=expires)
 
         del request.session['cart']
         request.session.modified = True
@@ -385,9 +388,11 @@ def add_to_favorites(request, id):
     if liked:
         liked = [int(x) for x in liked.strip('][').split(',')]
         liked.append(id)
-        response.set_cookie('liked', liked)
     else:
-        response.set_cookie('liked', [int(id)])
+        liked = [id]
+    max_time = datetime.now() + timedelta(days=365)
+    expires = datetime.strftime(max_time, "%a, %d-%b-%Y %H:%M:%S GMT")
+    response.set_cookie('liked', liked, expires=expires)
     return response
 
 
@@ -397,7 +402,9 @@ def remove_from_favorites(request, id):
     liked = [int(x) for x in request.COOKIES.get('liked').strip('][').split(',')]
     if id in liked:
         liked.remove(id)
-        response.set_cookie('liked', liked)
+        max_time = datetime.now() + timedelta(days=365)
+        expires = datetime.strftime(max_time, "%a, %d-%b-%Y %H:%M:%S GMT")
+        response.set_cookie('liked', liked, expires=expires)
 
     if not liked:
         response.delete_cookie('liked')
