@@ -1,5 +1,6 @@
 {% extends 'shop/base.html' %}
 {% load static %}
+{% load shop_tags %}
 
 {% block css_styles %}
 <link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
@@ -87,7 +88,7 @@
                                 <td>{{i.id}}</td>
                                 <td>{{i.time_create|date:"j M, Y" }}</td>
                                 <td>{{i.status}}</td>
-                                <td>$ {{i.price}}</td>
+                                <td>$ {{i.orderlist_set.all|sum_subtotal|add:i.shipping_price}}</td>
                                 <td><a href="{{ i.get_absolute_url }}" class="account-table-link">View Order</a></td>
                             </tr>
                         {% endfor %}

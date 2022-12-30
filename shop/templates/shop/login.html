@@ -1,5 +1,6 @@
 {% extends 'shop/base.html' %}
 {% load static %}
+{% load shop_tags %}
 
 {% block css_styles %}
 <link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
@@ -59,6 +60,30 @@
             <a href="{% url 'register' %}" class="link-url">Register</a>
         </div>
 
+        {% if messages %}
+            {% for i in messages %}
+                {% if i.level == DEFAULT_MESSAGE_LEVEL.SUCCESS %}
+                    <div class="message-auth success-message">
+                        <p>
+                            {{ i }}
+                        </p>
+                    </div>
+                {% elif i.level == DEFAULT_MESSAGE_LEVEL.ERROR %}
+                    <div class="message-auth error-auth">
+                        <p>
+                            {{ i }}
+                        </p>
+                    </div>
+                {% else %}
+                     <div class="message-auth">
+                        <p>
+                            {{ i }}
+                        </p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
         <form class="sign-in_form" method="post">
             {% csrf_token %}
             <div class="form-errors">
@@ -82,7 +107,7 @@
 
             <button type="submit" class="sign-in_form-submit">SIGN IN</button>
         </form>
-        <a href="#!" class="forgotten-pass">Have you forgotten your password?</a>
+        <a href="{% url 'password_reset' %}" class="forgotten-pass">Have you forgotten your password?</a>
     </div>
 </main>
 {% endblock %}

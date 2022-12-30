@@ -1,15 +1,19 @@
+import uuid
+
+from django.contrib import messages
 from django.contrib.auth import logout
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeDoneView, PasswordResetCompleteView, \
+    PasswordResetConfirmView, PasswordResetDoneView, PasswordResetView
+from django.core.mail import EmailMessage
 from django.db.models import Prefetch, Avg
-from django.http import HttpResponse, HttpResponseNotFound
-from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, TemplateView, CreateView
+from django.views.generic import ListView, DetailView, TemplateView, CreateView, FormView
 
 from .filters import ProductFilter
 from .forms import *
 from .models import *
+
 
 class HomePage(ListView):
     model = Product
@@ -30,7 +34,6 @@ class Shop(ListView):
     template_name = 'shop/shop.html'
     context_object_name = 'products_list'
 
-
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Shop'
@@ -44,8 +47,6 @@ class Shop(ListView):
             'price': 'Price: Low-High',
             '-price': 'Price: High-Low'
         }
-        if self.request.GET:
-            print(self.request.GET)
         context['get_items'] = self.request.GET
         return context
 
@@ -93,9 +94,8 @@ class ProductView(DetailView):
         return redirect('product_page', product_id)
 
 
-class TermsOfServives(TemplateView):
+class TermsOfServices(TemplateView):
     template_name = 'shop/privacy.html'
-
 
 
 # user
@@ -109,17 +109,79 @@ class RegisterUser(CreateView):
         context['title'] = 'Register'
         return context
 
+    def post(self, request, *args, **kwargs):
+        form = RegisterUserForm(self.request.POST)
+        if form.is_valid():
+            user = form.save()
+
+            auth_token = str(uuid.uuid4())
+            password_token = str(uuid.uuid4())
+
+            profile = Profile.objects.get_or_create(user=user)
+            profile[0].auth_token = auth_token
+            profile[0].password_token = password_token
+            profile[0].save()
+
+            send_email_verify(user.email, auth_token)
+            messages.success(request, 'An email has been sent to your email. Please verify your email address')
+            return redirect('login')
+        else:
+            return render(request, self.template_name, {'form': form})
+
+
+def send_email_verify(email, token):
+    subject = 'Your accounts need to be verified'
+    message = f'Hi! Paste the link to verify your account \n\nhttp://127.0.0.1:8000/verify/{token}'
+    recipient_list = [email]
+    msg = EmailMessage(subject, message, to=recipient_list)
+    msg.send()
+
+
+def verify(request, auth_token):
+    try:
+        profile = Profile.objects.filter(auth_token=auth_token).first()
+    except:
+        messages.error(request, 'Something went wrong')
+        return redirect('login')
+
+    if profile:
+        if profile.email_verify:
+            messages.success(request, 'Your email has already been verified')
+            return redirect('login')
+        profile.email_verify = True
+        profile.save()
+        messages.success(request, 'Your account has been successfully verified')
+    else:
+        messages.error(request, 'Something went wrong')
+
+    return redirect('login')
+
+
 class LoginUser(LoginView):
     form_class = LoginUserForm
     template_name = 'shop/login.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('account')
+        return super(LoginUser, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Login'
         return context
 
+    def form_valid(self, form):
+        user = form.get_user()
+        if user.profile.email_verify:
+            return super().form_valid(form)
+        else:
+            messages.error(self.request, 'Please verify your email')
+            return redirect('login')
+
     def get_success_url(self):
         return reverse_lazy('account')
+
 
 class AccountView(TemplateView):
     template_name = 'shop/account.html'
@@ -128,7 +190,7 @@ class AccountView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Account'
         context['user'] = User.objects.get(username=self.request.user)
-        context['orders'] = context['user'].order_set.all().order_by('-time_create')
+        context['orders'] = context['user'].order_set.all().prefetch_related('orderlist_set').order_by('-time_create')
         context['user_form'] = UpdateUserForm(instance=self.request.user)
 
         liked_id = self.request.session.get('favorites')
@@ -140,15 +202,45 @@ class AccountView(TemplateView):
 
         return context
 
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return redirect('login')
+        return super(AccountView, self).dispatch(request, *args, **kwargs)
+
     def post(self, request):
+        user_email = request.user.email
         form = UpdateUserForm(request.POST, instance=request.user)
         if form.is_valid():
-            form.save()
-        else:
-            print('DEGENERAT')
+            user = form.save()
+            if form.cleaned_data.get('email') != user_email:
+                profile = Profile.objects.get(user=user)
 
+                auth_token = str(uuid.uuid4())
+                send_email_verify(user.email, auth_token)
+                messages.success(request, 'An email has been sent to your email. Please verify your email address')
+
+                profile.email_verify = False
+                profile.auth_token = auth_token
+                profile.save()
+                logout(request)
+
+                return redirect('login')
         return redirect(request.path)
 
+
+class ChangePasswordReset(PasswordResetView):
+    template_name = 'shop/reset_password.html'
+    form_class = ResetPasswordEmail
+
+class ChangePasswordResetDone(PasswordResetDoneView):
+    template_name = 'shop/reset_password_done.html'
+
+class ChangePasswordResetConfirm(PasswordResetConfirmView):
+    template_name = 'shop/reset_password_confirm.html'
+    form_class = SetPassword
+
+class ChangePasswordResetComplete(PasswordResetCompleteView):
+    template_name = 'shop/reset_password_complete.html'
 
 
 class CartView(TemplateView):
@@ -171,7 +263,6 @@ class CartView(TemplateView):
             context['items'] = False
 
         return context
-
 
 
 class CheckoutView(TemplateView):
@@ -249,32 +340,23 @@ class OrderView(DetailView):
         context = super().get_context_data(**kwargs)
         context['title'] = f'Order - {context["order"]}'
 
-
         context['can_view'] = False
-        print(self.request.COOKIES)
 
         if self.request.COOKIES.get('orders_can_view'):
             list_orders = [int(x) for x in self.request.COOKIES.get('orders_can_view').strip('][').split(',')]
-            print(list_orders, context['order'].id)
             if context['order'].id in list_orders:
                 context['can_view'] = True
 
         if self.request.user.is_authenticated:
-            print(self.request.user.id)
             if context['order'].user and self.request.user.id == context['order'].user.id:
                 context['can_view'] = True
 
-        print(context)
         return context
-
-
-
 
 
 def logout_user(request):
     logout(request)
     return redirect('home')
-
 
 
 def add_to_favorites(request, id):
@@ -308,7 +390,6 @@ def remove_from_favorites(request, id):
 #cart
 def add_to_cart(request, id):
     if request.method == 'POST':
-        print(request.POST)
         if not request.session.get('cart'):
             request.session['cart'] = dict()
             request.session['cart']['items'] = dict()
@@ -332,17 +413,18 @@ def add_to_cart(request, id):
         return redirect(request.POST.get('url_from'))
 
 
-
 def remove_from_cart(request, id):
     if request.method == 'POST':
         del request.session['cart']['items'][id]
         request.session.modified = True
     return redirect(request.POST.get('url_from'))
 
+
 def clear_cart(request):
     if request.method == 'POST':
         del request.session['cart']
     return redirect(request.POST.get('url_from'))
+
 
 def sale_cart(request):
     if request.method == 'POST':
@@ -352,7 +434,6 @@ def sale_cart(request):
             coupon = False
 
         if coupon:
-            print(coupon.order_set.count())
             if coupon.order_set.count() < coupon.max_uses:
                 data = {
                     'id': coupon.id,
@@ -366,6 +447,7 @@ def sale_cart(request):
             request.session['cart']['sale'] = 'nothing'
         request.session.modified = True
     return redirect(request.POST.get('url_from'))
+
 
 def pageNotFound(request, exception):
     return render(request, 'shop/error.html', {'title': 'Страница не найдена'})

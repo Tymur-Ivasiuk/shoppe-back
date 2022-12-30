@@ -1,6 +1,8 @@
 import phonenumber_field.formfields
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
+from django.contrib.auth import password_validation
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordChangeForm, \
+    PasswordResetForm, SetPasswordForm
 
 from .models import *
 
@@ -143,4 +145,18 @@ class OrderForm(forms.ModelForm):
             'town', 'phone', 'email', 'order_notes'
         )
 
+class ResetPasswordEmail(PasswordResetForm):
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'class': 'form-input', 'placeholder': 'Email'})
+    )
+
+class SetPassword(SetPasswordForm):
+    new_password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'New password'}),
+        help_text=password_validation.password_validators_help_text_html(),
+    )
+    new_password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Confirm password'}),
+    )
 

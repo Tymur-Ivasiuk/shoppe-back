@@ -833,3 +833,8 @@ body {
     background-color: #000;
     color: #ffffff;
 }
+
+.form-errors {
+    color: rgb(255, 0, 0);
+    margin-bottom: 15px;
+}

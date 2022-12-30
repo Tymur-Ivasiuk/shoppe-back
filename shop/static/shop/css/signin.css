@@ -152,3 +152,22 @@
     color: rgb(255, 0, 0);
     margin-bottom: 15px;
 }
+
+
+.message-auth {
+    border: 3px solid #EFEFEF;
+    border-radius: 3px;
+    padding: 16px 0;
+    margin-bottom: 20px;
+}
+.message-auth p {
+    max-width: 80%;
+    margin: 0 auto;
+}
+
+.error-message {
+    border-color: #fdd7d7;
+}
+.success-message {
+    border-color: #c6fbc1;
+}

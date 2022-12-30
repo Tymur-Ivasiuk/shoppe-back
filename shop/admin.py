@@ -36,3 +36,5 @@ admin.site.register(Category)
 admin.site.register(Attribute)
 admin.site.register(Coupon)
 admin.site.register(Order, OrderAdmin)
+
+admin.site.register(Profile)
