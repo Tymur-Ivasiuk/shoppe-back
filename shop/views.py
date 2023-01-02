@@ -8,6 +8,7 @@ from django.contrib.auth.views import LoginView, PasswordChangeDoneView, Passwor
     PasswordResetConfirmView, PasswordResetDoneView, PasswordResetView
 from django.core.mail import EmailMessage, mail_admins
 from django.db.models import Prefetch, Avg
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, FormView
@@ -321,6 +322,8 @@ def create_order(request):
                 quantity=request.session['cart']['items'][str(i.id)]['quantity'],
                 price=request.session['cart']['items'][str(i.id)]['price']
             )
+            i.quantity -= request.session['cart']['items'][str(i.id)]['quantity']
+            i.save()
 
         response = redirect('order', order_id=order.id)
 
@@ -382,27 +385,45 @@ def logout_user(request):
     logout(request)
     return redirect('home')
 
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
 @login_required(login_url='login')
-def add_to_favorites(request, id):
+def add_to_favorites(request):
+    id = request.POST.get('id')
+
+    if request.method == 'POST':
+        profile = request.user.profile
+
+        if profile.user_json.get('liked'):
+            profile.user_json['liked'].append(id)
+        else:
+            profile.user_json['liked'] = [id]
+        profile.save()
+
+    # AJAX
+    if is_ajax(request=request):
+        return JsonResponse({'id': id})
+
+    return redirect(request.POST.get('url_from'))
+
+
+def remove_from_favorites(request):
     profile = request.user.profile
-
-    if profile.user_json.get('liked'):
-        profile.user_json['liked'].append(id)
-    else:
-        profile.user_json['liked'] = [id]
-    profile.save()
-
-    return redirect('product_page', product_id=id)
-
-
-def remove_from_favorites(request, id):
-    profile = request.user.profile
+    id = request.POST.get('id')
 
     if id in profile.user_json.get('liked'):
         profile.user_json['liked'].remove(id)
         profile.save()
 
+    # AJAX
+    if is_ajax(request=request):
+        return JsonResponse({'id': id})
+
     return redirect('product_page', product_id=id)
+
+def favorites_api(request):
+    return JsonResponse(request.user.profile.user_json, safe=False)
 
 
 

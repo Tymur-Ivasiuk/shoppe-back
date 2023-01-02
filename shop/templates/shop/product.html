@@ -163,35 +163,10 @@
             {% endif %}
 
             <div class="product-info_buttons">
-
-                {% if request.user.is_authenticated %}
-                    {% if product.id in request.user.profile.user_json|get_item:'liked' %}
-                        <form action="{% url 'remove_fav' id=product.id %}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="url_from" value="{{ request.path }}">
-                            <button class="product-info_buttons-like" id="button_like">
-                                <img src="{% static 'shop/img/svg/main/product_icons/like-on-icon.svg' %}" alt="like-on" class="like-icon active" id="like_icon-on">
-                            </button>
-                        </form>
-                    {% else %}
-                        <form action="{% url 'add_fav' id=product.id %}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="url_from" value="{{ request.path }}">
-                            <button class="product-info_buttons-like" id="button_like">
-                                <img src="{% static 'shop/img/svg/main/product_icons/like-off-icon.svg' %}" alt="like-off" class="like-icon active" id="like_icon-off">
-                            </button>
-                        </form>
-                    {% endif %}
-                {% else %}
-                    <form action="{% url 'add_fav' id=product.id %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="url_from" value="{{ request.path }}">
-                        <button class="product-info_buttons-like" id="button_like">
-                            <img src="{% static 'shop/img/svg/main/product_icons/like-off-icon.svg' %}" alt="like-off" class="like-icon active" id="like_icon-off">
-                        </button>
-                    </form>
-                {% endif %}
-
+                <div class="product-info_buttons-like" id="button_like" data-id="{{ product.id }}">
+                    <img src="{% static 'shop/img/svg/main/product_icons/like-off-icon.svg' %}" alt="like-off" class="like-icon active" id="like_icon-off">
+                    <img src="{% static 'shop/img/svg/main/product_icons/like-on-icon.svg' %}" alt="like-on" class="like-icon" id="like_icon-on">
+                </div>
 
 
                 <div class="product-info_buttons-links">
@@ -355,6 +330,7 @@
 <script src="{% static 'shop/js/slick.min.js' %}"></script>
 <script src="{% static 'shop/js/sliderProduct.js' %}"></script>
 <script src="{% static 'shop/js/tabs.js' %}"></script>
-<script src="{% static 'shop/js/messageAddCart.js' %}./"></script>
-<script src="{% static 'shop/js/fontAwesome.js' %}./"></script>
+<script src="{% static 'shop/js/messageAddCart.js' %}"></script>
+<script src="{% static 'shop/js/fontAwesome.js' %}"></script>
+<script src="{% static 'shop/js/ajax_script.js' %}"></script>
 {% endblock %}

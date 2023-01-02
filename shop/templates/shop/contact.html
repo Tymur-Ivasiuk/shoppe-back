@@ -19,13 +19,13 @@
 
         {% if messages %}
             {% for i in messages %}
-                {% if i.level == DEFAULT_MESSAGE_LEVEL.SUCCESS %}
+                {% if i.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
                     <div class="message-status success-message">
                         <p>
                             {{ i }}
                         </p>
                     </div>
-                {% elif i.level == DEFAULT_MESSAGE_LEVEL.ERROR %}
+                {% elif i.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
                     <div class="message-status error-message">
                         <p>
                             {{ i }}

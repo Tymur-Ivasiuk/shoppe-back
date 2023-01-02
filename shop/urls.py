@@ -28,8 +28,9 @@ urlpatterns = [
     path('reset/done/', ChangePasswordResetComplete.as_view(), name='password_reset_complete'),
 
     #favorites
-    path('favorites/<int:id>/add/', add_to_favorites, name='add_fav'),
-    path('favorites/<int:id>/remove/', remove_from_favorites, name='remove_fav'),
+    path('favorites/add/', add_to_favorites, name='add_fav'),
+    path('favorites/remove/', remove_from_favorites, name='remove_fav'),
+    path('favorites/api/', favorites_api, name='api'),
 
     #cart
     path('cart-options/<int:id>/add', add_to_cart, name='add_cart'),

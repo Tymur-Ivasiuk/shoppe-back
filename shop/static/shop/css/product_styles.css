@@ -393,14 +393,16 @@ input[type=number] {
     position: absolute;
     top: 50%;
     left: 0;
-    opacity: 0;
     transform: translateY(-50%);
     transition: 0.2s ease;
 }
 .product-info_buttons-like:hover {
     opacity: 1;
 }
-.active {
+#like_icon-on {
+    opacity: 0;
+}
+.active #like_icon-on{
     opacity: 1;
 }
 
