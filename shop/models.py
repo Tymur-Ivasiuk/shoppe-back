@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import *
 from django.dispatch import receiver
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -140,10 +140,31 @@ class OrderList(models.Model):
     order = models.ForeignKey('Order', on_delete=models.CASCADE)
     product = models.ForeignKey('Product', on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField(default=1)
+    new_quantity = models.PositiveSmallIntegerField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[validate_positive], default=0)
 
     def __str__(self):
         return str(self.order)
+
+
+@receiver(post_save, sender=OrderList)
+def my_handler2(sender, instance, **kwargs):
+    print(OrderList.objects.filter(id=instance.id))
+    OrderList.objects.filter(id=instance.id).update(quantity = instance.new_quantity, new_quantity = 0)
+
+@receiver(post_save, sender=OrderList)
+def my_handler2(sender, instance, created, **kwargs):
+    if created:
+        d = Product.objects.get(id=instance.product_id)
+        d.quantity -= instance.quantity
+        d.save()
+
+
+@receiver(post_delete, sender=OrderList)
+def my_handler3(sender, instance, **kwargs):
+    d = Product.objects.get(id=instance.product_id)
+    d.quantity += instance.quantity
+    d.save()
 
 
 class Coupon(models.Model):

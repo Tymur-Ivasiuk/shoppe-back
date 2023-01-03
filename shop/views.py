@@ -8,7 +8,7 @@ from django.contrib.auth.views import LoginView, PasswordChangeDoneView, Passwor
     PasswordResetConfirmView, PasswordResetDoneView, PasswordResetView
 from django.core.mail import EmailMessage, mail_admins
 from django.db.models import Prefetch, Avg
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, FormView
@@ -322,8 +322,6 @@ def create_order(request):
                 quantity=request.session['cart']['items'][str(i.id)]['quantity'],
                 price=request.session['cart']['items'][str(i.id)]['price']
             )
-            i.quantity -= request.session['cart']['items'][str(i.id)]['quantity']
-            i.save()
 
         response = redirect('order', order_id=order.id)
 
@@ -388,8 +386,10 @@ def logout_user(request):
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
-@login_required(login_url='login')
 def add_to_favorites(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(f'{reverse("login")}?next={request.POST.get("url_from")}')
+
     id = request.POST.get('id')
 
     if request.method == 'POST':
@@ -405,7 +405,7 @@ def add_to_favorites(request):
     if is_ajax(request=request):
         return JsonResponse({'id': id})
 
-    return redirect(request.POST.get('url_from'))
+    return redirect('product_page', product_id=id)
 
 
 def remove_from_favorites(request):
@@ -428,7 +428,9 @@ def favorites_api(request):
 
 
 #cart
-def add_to_cart(request, id):
+def add_to_cart(request):
+    id = request.POST.get('id')
+
     if request.method == 'POST':
         if not request.session.get('cart'):
             request.session['cart'] = dict()
@@ -438,8 +440,13 @@ def add_to_cart(request, id):
             request.session['cart']['items'] = dict(request.session['cart'].get('items'))
 
         if request.session['cart']['items'].get(id):
-            if int(request.POST.get('quantity')) != 0:
-                request.session['cart']['items'][id]['quantity'] = int(request.POST.get('quantity'))
+            d = request.session['cart']['items'][id]['quantity'] + int(request.POST.get('quantity'))
+            if d != 0:
+                product_quantity = Product.objects.get(id=int(id)).quantity
+                if d <= product_quantity:
+                    request.session['cart']['items'][id]['quantity'] += int(request.POST.get('quantity'))
+                else:
+                    request.session['cart']['items'][id]['quantity'] = product_quantity
             else:
                 del request.session['cart']['items'][id]
         else:
@@ -450,13 +457,30 @@ def add_to_cart(request, id):
             request.session['cart']['items'][id] = data
 
         request.session.modified = True
-        return redirect(request.POST.get('url_from'))
+
+    if is_ajax(request=request):
+        data = {
+            id: {
+                'quantity': int(request.POST.get('quantity')),
+            }
+        }
+        request.session.modified = True
+        return JsonResponse(data)
+
+    return redirect(request.POST.get('url_from'))
 
 
-def remove_from_cart(request, id):
+def remove_from_cart(request):
+    id = request.POST.get('id')
+
     if request.method == 'POST':
         del request.session['cart']['items'][id]
         request.session.modified = True
+
+    if is_ajax(request=request):
+        request.session.modified = True
+        return JsonResponse({'id': id})
+
     return redirect(request.POST.get('url_from'))
 
 
@@ -487,6 +511,9 @@ def sale_cart(request):
             request.session['cart']['sale'] = 'nothing'
         request.session.modified = True
     return redirect(request.POST.get('url_from'))
+
+def cart_json(request):
+    return JsonResponse(request.session['cart'].get('items'), safe=False)
 
 
 def pageNotFound(request, exception):

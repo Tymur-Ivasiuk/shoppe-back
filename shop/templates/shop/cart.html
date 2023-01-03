@@ -54,12 +54,13 @@
     <h1 class="cart-title">
         Shopping Cart
     </h1>
+    {{ request.session|get_item:'cart' }}
     <section class="cart">
         {% if items %}
             <div class="cart-wrap">
                 <div class="cart-items">
                     {% for i in items %}
-                        <div class="cart-item">
+                        <div class="cart-item" product-id="{{i.id}}">
                             <div class="cart-item_info">
                                 <div class="cart-item-pic-wrap">
                                     {% if i.photo_set.first %}
@@ -78,24 +79,26 @@
                                 </div>
                             </div>
                             <div class="cart-item_action">
-                                <form action="{% url 'add_cart' id=i.id %}" method="post">
+                                <form action="{% url 'add_cart' %}" method="post">
                                     {% csrf_token %}
-                                    <input type="hidden" name="url_from" value="{{ request.path }}">
+                                    <input type="hidden" name="id" id="product_id" value="{{ i.id }}">
+                                    <input type="hidden" name="url_from" id="url_from" value="{{request.path}}">
 
                                     <div class="cart-item-amount">
-                                        <button type="submit" name="quantity" value="{{ request.session.cart|get_item:'items'|get_item:i.id|get_item:'quantity'|add:'-1' }}" id="button_minus">-</button>
+                                        <button type="submit" name="quantity" value="-1" class="button_minus">-</button>
                                         <input type="number" step="1" min="0" max="{{i.quantity}}" id="num_count" value="{{ request.session.cart|get_item:'items'|get_item:i.id|get_item:'quantity' }}" title="Qty" readonly="true">
                                         {% if request.session.cart|get_item:'items'|get_item:i.id|get_item:'quantity' == i.quantity %}
-                                            <button type="button" class="disabled">+</button>
+                                            <button type="button" name="quantity" value="1" product-id="{{i.id}}" class="button_plus disabled" disabled="true">+</button>
                                         {% else %}
-                                            <button type="submit" name="quantity" value="{{ request.session.cart|get_item:'items'|get_item:i.id|get_item:'quantity'|add:'1' }}" id="button_plus">+</button>
+                                            <button type="submit" name="quantity" value="1" product-id="{{i.id}}" class="button_plus">+</button>
                                         {% endif %}
                                     </div>
                                 </form>
 
-                                <form action="{% url 'remove_cart' id=i.id %}" method="post">
+                                <form action="{% url 'remove_cart' %}" method="post">
                                     {% csrf_token %}
-                                    <input type="hidden" name="url_from" value="{{ request.path }}">
+                                    <input type="hidden" name="id" value="{{ i.id }}">
+                                    <input type="hidden" name="url_from" value="{{request.path}}">
                                     <button class="button-remove"><img src="{% static 'shop/img/svg/x.svg' %}" alt="x" class="cart-item-x"></button>
                                 </form>
 
@@ -129,15 +132,17 @@
                 </h2>
                 <div class="subtotal">
                     <span>SUBTOTAL</span>
-                    <span>$ {{ request.session.cart.items|sum_subtotal }}</span>
+                    <p><span>$ <span id="subtotal">{{ request.session.cart.items|sum_subtotal }}</span></span></p>
+
                 </div>
                 <div class="subtotal">
                     <span>SHIPPING</span>
-                    <span>$ 10</span>
+                    <p><span>$ <span id="shipping">10</span></span></p>
                 </div>
                 <div class="total-row">
                     <span>TOTAl</span>
-                    <span>$ {{ request.session.cart.items|sum_subtotal|add:"10" }}</span>
+                    <p><span>$ <span id="total">{{ request.session.cart.items|sum_subtotal|add:"10" }}</span></span></p>
+
                 </div>
                 <div class="checkout-link">
                     <a href="{% url 'checkout' %}">
@@ -167,5 +172,6 @@
 {% endblock %}
 
 {% block js_scripts %}
-<script src="{% static 'shop/js/quantity_product.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="{% static 'shop/js/ajax_cart.js' %}"></script>
 {% endblock %}

@@ -3,6 +3,9 @@ from django import forms
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordChangeForm, \
     PasswordResetForm, SetPasswordForm
+from django.forms import Widget
+from django.forms.utils import flatatt
+from django.utils.html import format_html
 
 from .models import *
 
@@ -182,4 +185,16 @@ class ContactForm(forms.Form):
         required=True,
         widget=forms.Textarea(attrs={'class': 'contact-form_text', 'rows': '3', 'style': 'resize: none;', 'placeholder': 'Message'})
     )
+
+class OrderListFormAdmin(forms.ModelForm):
+    new_quantity = forms.IntegerField(required=False)
+    quantity = forms.IntegerField(
+        required=False,
+        widget=forms.NumberInput(attrs={'readonly': 'true'})
+    )
+
+    class Meta:
+        model = OrderList
+        exclude = ('', )
+
 

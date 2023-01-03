@@ -277,12 +277,11 @@
     padding-bottom: 39px;
     border-bottom: 1px solid #D8D8D8;
     margin-bottom: 42px;
-}
-.subtotal span:first-of-type {
-    margin-right: 27%;
-}
-.subtotal span:last-of-type {
     color: #707070;
+}
+.subtotal > span:first-of-type {
+    margin-right: 27%;
+    color: #000;
 }
 
 .total-row {

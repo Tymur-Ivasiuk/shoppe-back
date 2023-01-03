@@ -33,10 +33,11 @@ urlpatterns = [
     path('favorites/api/', favorites_api, name='api'),
 
     #cart
-    path('cart-options/<int:id>/add', add_to_cart, name='add_cart'),
-    path('cart-options/<int:id>/remove', remove_from_cart, name='remove_cart'),
+    path('cart-options/add', add_to_cart, name='add_cart'),
+    path('cart-options/remove', remove_from_cart, name='remove_cart'),
     path('cart-options/clear', clear_cart, name='clear_cart'),
     path('cart-options/sale', sale_cart, name='sale_cart'),
+    path('cart-options/json', cart_json, name='json_cart'),
 
     #order
     path('create-order/', create_order, name='create_order'),
