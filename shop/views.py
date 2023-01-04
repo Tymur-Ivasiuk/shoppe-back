@@ -16,6 +16,7 @@ from django.views.generic import ListView, DetailView, TemplateView, CreateView,
 from .filters import ProductFilter
 from .forms import *
 from .models import *
+from .utils import *
 
 
 class HomePage(ListView):
@@ -136,9 +137,7 @@ def send_email_verify(email, token):
     subject = 'Your accounts need to be verified'
     message = f'Hi! Paste the link to verify your account \n\nhttp://127.0.0.1:8000/verify/{token}'
     recipient_list = [email]
-    msg = EmailMessage(subject, message, to=recipient_list)
-    msg.send()
-
+    EmailThread(subject, message, recipient_list).start()
 
 def verify(request, auth_token):
     try:
@@ -379,6 +378,10 @@ class ContactView(FormView):
         return redirect(request.path)
 
 
+class AboutView(TemplateView):
+    template_name = 'shop/about.html'
+
+
 def logout_user(request):
     logout(request)
     return redirect('home')
@@ -515,6 +518,12 @@ def sale_cart(request):
 def cart_json(request):
     return JsonResponse(request.session['cart'].get('items'), safe=False)
 
+
+def email_news(request):
+    if request.method == 'POST':
+        EmailNews.objects.create(email=request.POST.get('email'))
+
+    return redirect(request.POST.get('url_from'))
 
 def pageNotFound(request, exception):
     return render(request, 'shop/error.html', {'title': 'Страница не найдена'})

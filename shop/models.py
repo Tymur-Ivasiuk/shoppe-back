@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.core.mail import EmailMessage
 from django.db import models
 from django.db.models.signals import *
 from django.dispatch import receiver
@@ -7,6 +8,7 @@ from django.utils.safestring import mark_safe
 from django.contrib.auth.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 
+from .utils import EmailThread
 from .validators import *
 
 
@@ -62,6 +64,15 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('product_page', kwargs={'product_id': self.id})
+
+@receiver(post_save, sender=Product)
+def send_email_news(sender, instance, created, **kwargs):
+    if created and instance.is_published:
+        emails = EmailNews.objects.all()
+        subject = 'New Product'
+        message = f'The new {instance.title} is finally available! \n\nhttp://127.0.0.1:8000{instance.get_absolute_url()}'
+        recipient_list = [x.email for x in emails]
+        EmailThread(subject, message, recipient_list).start()
 
 class Attribute(models.Model):
     name = models.CharField(max_length=255)
@@ -183,3 +194,10 @@ class Coupon(models.Model):
 
     def __str__(self):
         return self.code
+
+
+class EmailNews(models.Model):
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.email

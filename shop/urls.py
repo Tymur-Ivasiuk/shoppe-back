@@ -14,6 +14,7 @@ urlpatterns = [
     path('checkout/', CheckoutView.as_view(), name='checkout'),
     path('order/<int:order_id>/', OrderView.as_view(), name='order'),
     path('contact-us/', ContactView.as_view(), name='contact'),
+    path('about/', AboutView.as_view(), name='about'),
 
     #user
     path('login/', LoginUser.as_view(), name='login'),
@@ -21,6 +22,7 @@ urlpatterns = [
     path('register/', RegisterUser.as_view(), name='register'),
     path('account/', AccountView.as_view(), name='account'),
     path('verify/<auth_token>/', verify, name='verify'),
+
     #passwords
     path('password_reset/', ChangePasswordReset.as_view(), name='password_reset'),
     path('password_reset/done/', ChangePasswordResetDone.as_view(), name='password_reset_done'),
@@ -41,6 +43,9 @@ urlpatterns = [
 
     #order
     path('create-order/', create_order, name='create_order'),
+
+    #email
+    path('email-news/add/', email_news, name='email_news')
 ]
 
 if settings.DEBUG:

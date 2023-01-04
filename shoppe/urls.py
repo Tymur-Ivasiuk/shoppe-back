@@ -15,12 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import routers
 
 from shop.views import *
+from shop.view_api import *
+
+router = routers.SimpleRouter()
+router.register(r'products', ProductAPI)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('shop.urls')),
+
+    # api
+    path('api/v1/', include(router.urls)),
+    path('api/v1/orders/', OrderListAPI.as_view()),
+    path('api/v1/orders/<int:pk>/', OrderDetailAPI.as_view()),
 ]
 
 handler404 = pageNotFound

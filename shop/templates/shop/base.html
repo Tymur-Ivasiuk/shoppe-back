@@ -11,6 +11,8 @@
     <link type="text/css" href="{% static 'shop/css/styles.css' %}" rel="stylesheet">
     {% endblock %}
 
+    <link rel="shortcut icon" href="{% static 'shop/img/jpg/main-icon.png' %}" type="image/x-icon">
+
     {% block js_head %}
     {% endblock %}
 </head>
@@ -29,13 +31,10 @@
                 </div>
                 <div class="header-menu">
                     <div class="header-menu-items">
-                        <a href="{% url 'shop' %}" class="header-menu-link-text flicking">
+                        <a href="{% url 'shop' %}" class="header-menu-link-text">
                             Shop
                         </a>
-                        <a href="#!" class="header-menu-link-text">
-                            Blog
-                        </a>
-                        <a href="#!" class="header-menu-link-text">
+                        <a href="{% url 'about' %}" class="header-menu-link-text">
                             Our Story
                         </a>
                     </div>
@@ -73,14 +72,13 @@
                         <a href="{% url 'privacy' %}" class="footer-menu-words">
                             TERMS OF SERVICES
                         </a>
-                        <a href="#!" class="footer-menu-words">
-                            SHIPPING AND RETURNS
-                        </a>
                     </div>
-                    <form class="footer-form">
+                    <form action="{% url 'email_news' %}" class="footer-form" method="post">
+                        {% csrf_token %}
                         <fieldset>
                             <p class="footer-form-info">
-                                <input name="user-email" type="text" class="footer-form-field" placeholder="Give an email, get the newsletter.">
+                                <input name="email" type="text" class="footer-form-field" placeholder="Give an email, get the newsletter.">
+                                <input type="hidden" name="url_from" value="{{request.path}}">
                                 <button class="footer-form-submit">
                                     <img src="{% static 'shop/img/svg/footer/shape-form.svg' %}" alt="submit">
                                 </button>

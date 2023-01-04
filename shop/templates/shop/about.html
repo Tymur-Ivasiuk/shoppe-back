@@ -1,8 +1,9 @@
 {% extends 'shop/base.html' %}
+{% load static %}
 
 {% block css_styles %}
-<link type="text/css" href="{% static 'shop/css/styles.css' %}" rel="stylesheet">
-<link type="text/css" href="{% static 'shop/css/product_styles.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
+<link rel="stylesheet" href="{% static 'shop/css/about.css' %}">
 {% endblock %}
 
 {% block header %}
@@ -20,7 +21,7 @@
                 <a href="{% url 'shop' %}" class="header-menu-link-text">
                     Shop
                 </a>
-                <a href="{% url 'about' %}" class="header-menu-link-text">
+                <a href="{% url 'about' %}" class="header-menu-link-text flicking">
                     Our Story
                 </a>
             </div>
@@ -46,19 +47,13 @@
 
 {% block main %}
 <main class="main">
-    <div class="error">
-        <h2 class="error-title">
-            404 ERROR
-        </h2>
-        <p class="error-text">
-            This page not found;
-            back to home and start again
+    <div class="about-wrap">
+        <h1 class="about-title">
+            About
+        </h1>
+        <p class="about-desc">
+            This site was made solo by a 17 years old guy. This site is not a real online store, but just one of the portfolio projects. The site has many different and interesting features and capabilities. You can create an order, view the products you like, filter and add comments under the product.
         </p>
-        <a href="{% url 'home' %}" class="error-link">
-            <div class="error-link-button">
-                HOMEPAGE
-            </div>
-        </a>
     </div>
 </main>
 {% endblock %}
