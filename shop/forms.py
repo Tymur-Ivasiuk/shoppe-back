@@ -196,5 +196,3 @@ class OrderListFormAdmin(forms.ModelForm):
     class Meta:
         model = OrderList
         exclude = ('', )
-
-

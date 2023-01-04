@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'adminsortable2',
     'django_filters',
     'phonenumber_field',
+    'rest_framework',
+    'admin_searchable_dropdown',
 ]
 
 MIDDLEWARE = [

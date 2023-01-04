@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.db import models
 from django.db.models.signals import *
 from django.dispatch import receiver
@@ -142,6 +143,14 @@ class OrderList(models.Model):
     quantity = models.PositiveSmallIntegerField(default=1)
     new_quantity = models.PositiveSmallIntegerField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[validate_positive], default=0)
+
+    @admin.display(description='max count')
+    def max_quantity(self):
+        return self.product.quantity + self.quantity
+
+    @admin.display(description='image')
+    def image_product(self):
+        return self.product.photo_set.first().image_tag()
 
     def __str__(self):
         return str(self.order)
