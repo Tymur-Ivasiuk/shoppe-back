@@ -54,7 +54,6 @@
     <section class="all-products">
         <form action="{% url 'shop' %}" class="filter-form" method="get">
 
-
             <p class="search-form">
                 {{ form.title }}
 
@@ -78,8 +77,6 @@
                         {% for d in form_select.items %}
                             <li class="select_item" data-value="{{ d.0 }}">{{ d.1 }}</li>
                         {% endfor %}
-
-
                     </ol>
 
                     <input type="text" name="category" value="{{get_items.category}}" class="select_input-hidden">
@@ -134,36 +131,63 @@
             </div>
         </form>
 
-
-        <div class="table-items-shop">
-            {% for i in products_list %}
-                <div class="table-item">
-                    <div class="table-item-wrap">
-                        <div class="table-item-card">
-                            <a href="{{ i.get_absolute_url }}" class="table-item-link">
-                                {% if i.photo_set.all %}
-                                    <img src="{{ i.photo_set.get.image.url }}" alt="1" class="table-item-pic">
-                                {% else %}
-                                    <img src="{% static 'shop/img/jpg/nothing-image.jpg' %}" alt="1" class="table-item-pic">
-                                {% endif %}
+        <div class="table-items-w-pag">
+            <div class="table-items-shop">
+                {% for i in products_list %}
+                    <div class="table-item">
+                        <div class="table-item-wrap">
+                            <div class="table-item-card">
+                                <a href="{{ i.get_absolute_url }}" class="table-item-link">
+                                    {% if i.photo_set.all %}
+                                        <img src="{{ i.photo_set.get.image.url }}" alt="1" class="table-item-pic">
+                                    {% else %}
+                                        <img src="{% static 'shop/img/jpg/nothing-image.jpg' %}" alt="1" class="table-item-pic">
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <a href="#!" class="table-item-link">
+                                <p class="table-item-name">
+                                    {{ i.title }}
+                                </p>
                             </a>
-                        </div>
-                        <a href="#!" class="table-item-link">
-                            <p class="table-item-name">
-                                {{ i.title }}
+                            <p class="table-item-price">
+                                $ {{ i.price }}
                             </p>
-                        </a>
-                        <p class="table-item-price">
-                            $ {{ i.price }}
-                        </p>
+                        </div>
                     </div>
+                {% endfor %}
+            </div>
+            {% if page_obj.has_other_pages %}
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{page_obj.previous_page_number}}" class="previous-page">
+                            <img src="{% static 'shop/img/svg/select-icon.svg' %}" alt="<">
+                        </a>
+                    {% endif %}
+                    {% for p in paginator.page_range %}
+                        {% if page_obj.number == p %}
+                            <a href="?page={{p}}" class="page-link active-page">
+                                <div>
+                                    <span>{{p}}</span>
+                                </div>
+                            </a>
+                        {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+                            <a href="?page={{p}}" class="page-link">
+                                <div>
+                                    <span>{{p}}</span>
+                                </div>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <a href="?page={{page_obj.next_page_number}}" class="next-page">
+                            <img src="{% static 'shop/img/svg/select-icon.svg' %}" alt=">">
+                        </a>
+                    {% endif %}
                 </div>
-            {% endfor %}
-
+            {% endif %}
         </div>
-
     </section>
-    <!-- table-items end -->
 </main>
 {% endblock %}
 
