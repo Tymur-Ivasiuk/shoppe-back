@@ -8,8 +8,13 @@
 }
 
 .tab {
-    overflow: hidden;
+    display: flex;
+    column-gap: 7%;
+    overflow-x: auto;
     border-bottom: 1px solid #D8D8D8;
+}
+.tab::-webkit-scrollbar {
+  display: none;
 }
 .tab button {
     background-color: inherit;
@@ -17,8 +22,8 @@
     border: none;
     outline: none;
     cursor: pointer;
-    margin-right: 96px;
 
+    white-space: nowrap;
     font-weight: 400;
     font-size: 20px;
     line-height: 26px;
@@ -68,13 +73,18 @@
 
 .account-message {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     justify-content: space-between;
+    align-items: center;
     padding: 20px 40px;
     background-color: #EFEFEF;
     border-top: 2px solid #A18A68;
 }
+.account-message-text {
+    margin-right: 10px;
+}
 .account-message-link {
+    white-space: nowrap;
     font-weight: 700;
     font-size: 16px;
     line-height: 21px;
@@ -124,7 +134,7 @@
 
 .account-details-wrap {
     margin: 0 auto;
-    width: 45%;
+    width: 85%;
 }
 .account-details-wrap h3 {
     font-weight: 700;
@@ -242,4 +252,124 @@
     color: #A18A68;
 
     text-decoration: none;
+}
+.account-orders {
+    display: none;
+    flex-direction: column;
+
+}
+.order-item {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #D8D8D8;
+}
+.order-item-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+.order-item-row p {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 20px;
+    color: #000000;
+}
+.order-item-row p:last-of-type {
+    color: #707070;
+}
+.order-item-row a {
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 20px;
+    color: #A18A68;
+    transition: 0.3s ease;
+}
+.order-item-row a:hover, .order-item-row a:focus, .order-item-row a:active {
+    color: #000;
+}
+
+
+@media (max-width: 849px) {
+    .liked-items {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+    .liked-item .item-pic-wrap {
+        width: 115px;
+        height: 115px;
+    }
+    .account-table {
+        display: none;
+    }
+    .account-orders {
+        display: flex;
+    }
+}
+
+@media (max-width: 699px) {
+    .tab {
+        column-gap: 30px;
+    }
+    .tab button, .tab a {
+        font-size: 16px;
+        padding-bottom: 28px;
+    }
+    .account-details-wrap h3 {
+        margin-top: 0;
+    }
+    .liked-items {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+}
+@media (max-width: 599px) {
+    .account-message {
+        padding: 10px 20px;
+    }
+    .account-message-link {
+        font-size: 14px;
+    }
+    .account-message-text {
+        font-size: 14px;
+    }
+}
+@media (max-width: 499px) {
+    .tab button, .tab a {
+        padding-bottom: 20px;
+    }
+    .account-details-title {
+        font-size: 26px;
+    }
+    .input-wrap {
+        margin-bottom: 0;
+    }
+    .input-wrap:last-of-type {
+        margin-bottom: 30px;
+    }
+
+    .liked-item .item-pic-wrap {
+        width: 100px;
+        height: 100px;
+    }
+    .liked-item .item-info p:first-of-type {
+        font-size: 16px;
+    }
+    .liked-item .item-info p {
+        font-size: 12px;
+    }
+    .liked-item a {
+        font-size: 14px;
+    }
+    .liked-items {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+}
+
+@media (max-width: 399px) {
+    .order-item-row p, .order-item-row a {
+        font-size: 14px;
+    }
 }

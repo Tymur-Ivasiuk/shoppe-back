@@ -7,13 +7,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, PasswordChangeDoneView, PasswordResetCompleteView, \
     PasswordResetConfirmView, PasswordResetDoneView, PasswordResetView
 from django.core.mail import EmailMessage, mail_admins
-from django.db.models import Prefetch, Avg
+from django.db.models import Prefetch, Avg, Max
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, FormView
 
-from .filters import ProductFilter
+from .filters import *
 from .forms import *
 from .models import *
 from .utils import *
@@ -50,19 +50,20 @@ class Shop(ListView):
             '-title': 'Z -> A',
             'sku': 'SKU',
             'price': 'Price: Low-High',
-            '-price': 'Price: High-Low'
+            '-price': 'Price: High-Low',
         }
         context['get_items'] = self.request.GET
         return context
 
     def get_queryset(self):
-        queryset = Product.objects.all().prefetch_related(
+        queryset = Product.objects.filter(is_published=True).prefetch_related(
             Prefetch('photo_set', queryset=Photo.objects.filter(index=1))
         ).order_by('-time_create')
         if self.request.GET.get('order_by'):
             queryset = queryset.order_by(self.request.GET.get('order_by'))
 
-        self.filterset = ProductFilter(self.request.GET, queryset=queryset)
+        max_price = str(int(queryset.aggregate(Max('price'))['price__max']))
+        self.filterset = ProductFilter(self.request.GET, queryset=queryset, max_value=max_price)
 
         return self.filterset.qs
 
@@ -86,6 +87,10 @@ class ProductView(DetailView):
         ).order_by('-time_create')[:3]
 
         return context
+
+    def get_queryset(self):
+        return Product.objects.filter(is_published=True)
+
 
     def post(self, request, product_id):
         form = ReviewForm(request.POST)
@@ -319,7 +324,7 @@ def create_order(request):
             OrderList.objects.create(
                 order=order,
                 product=i,
-                quantity=request.session['cart']['items'][str(i.id)]['quantity'],
+                new_quantity=request.session['cart']['items'][str(i.id)]['quantity'],
                 price=request.session['cart']['items'][str(i.id)]['price']
             )
 

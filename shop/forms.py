@@ -84,7 +84,7 @@ class ReviewForm(forms.ModelForm):
 
     text = forms.CharField(
         required=True,
-        widget=forms.TextInput(attrs={'class': 'review-text form-input', 'placeholder': 'Your Review *'})
+        widget=forms.Textarea(attrs={'class': 'review-text form-input', 'placeholder': 'Your Review *'})
     )
     name = forms.CharField(
         required=False,

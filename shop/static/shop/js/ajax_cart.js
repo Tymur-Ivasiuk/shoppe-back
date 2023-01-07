@@ -39,8 +39,9 @@ function add_to_cart() {
         $(el).click((e) => {
             e.preventDefault();
 
-            const max_value = Number($('#num_count').attr('max'))
-            const id = $('#product_id').val()
+            const max_value = Number($(el).parent('div.cart-item-amount').find('#num_count').attr('max'))
+            const id = Number($(el).parent('div.cart-item-amount').parent('form').find('#product_id').val())
+            const num_count = $(el).parent('div.cart-item-amount').find('#num_count')
 
             $.ajax({
                 url: add_cart_url,
@@ -52,9 +53,9 @@ function add_to_cart() {
                     url_from: $('#url_from').val()
                 },
                 success: function() {
-                    $('#num_count').val(Number($('#num_count').val())+Number($(el).val()))
+                    num_count.val(Number(num_count.val())+Number($(el).val()))
                     checkAjax()
-                    if (Number($('#num_count').val()) >= max_value) {
+                    if (Number(num_count.val()) >= max_value) {
                         console.log('MANY')
                         $('button[name="quantity"].button_plus').filter(`[product-id=${id}]`).addClass('disabled')
                         $('button[name="quantity"].button_plus').filter(`[product-id=${id}]`).attr('disabled', 'true')
@@ -63,8 +64,8 @@ function add_to_cart() {
                         $('button[name="quantity"].button_plus').filter(`[product-id=${id}]`).removeAttr('disabled')
                     }
 
-                    if(Number($('#num_count').val()) == 0) {
-                        $('.cart-item').filter(`[product-id=${id}]`).remove()
+                    if(Number(num_count.val()) == 0) {
+                        $(el).parents('div.cart-item').filter(`[product-id=${id}]`).remove()
                     }
 
                 },
@@ -82,7 +83,7 @@ function removeFromCart() {
         $(el).click((e) => {
             e.preventDefault();
 
-            const id = $('#product_id').val()
+            const id = $(el).parent('form').find('input[name="id"]').val()
 
             $.ajax({
                 url: remove_cart_url,
@@ -94,7 +95,7 @@ function removeFromCart() {
                 },
                 success: function() {
                     checkAjax()
-                    $('.cart-item').filter(`[product-id=${id}]`).remove()
+                    $(el).parents('div.cart-item').filter(`[product-id=${id}]`).remove()
                 }
             })
         })

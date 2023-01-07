@@ -67,7 +67,7 @@ class Product(models.Model):
 
 @receiver(post_save, sender=Product)
 def send_email_news(sender, instance, created, **kwargs):
-    if created and instance.is_published:
+    if instance.is_published:
         emails = EmailNews.objects.all()
         subject = 'New Product'
         message = f'The new {instance.title} is finally available! \n\nhttp://127.0.0.1:8000{instance.get_absolute_url()}'
@@ -152,7 +152,7 @@ class OrderList(models.Model):
     order = models.ForeignKey('Order', on_delete=models.CASCADE)
     product = models.ForeignKey('Product', on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField(default=1)
-    new_quantity = models.PositiveSmallIntegerField(blank=True)
+    new_quantity = models.PositiveSmallIntegerField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[validate_positive], default=0)
 
     @admin.display(description='max count')

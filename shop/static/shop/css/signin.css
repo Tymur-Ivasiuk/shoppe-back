@@ -1,7 +1,6 @@
 .sign-in {
-    width: 500px;
-    margin: 128px auto 0 auto;
-
+    max-width: 500px;
+    margin: 0 auto;
     text-align: center;
 }
 
@@ -170,4 +169,17 @@
 }
 .success-message {
     border-color: #c6fbc1;
+}
+
+
+@media (max-width: 400px) {
+    .links-reg {
+        margin-bottom: 40px;
+    }
+    .input-wrap {
+        margin-bottom: 0;
+    }
+    .input-wrap:last-of-type {
+        margin-bottom: 40px;
+    }
 }

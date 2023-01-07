@@ -404,3 +404,31 @@ input:checked + .checkbox-switch:before {
 .next-page img {
     transform: rotate(-90deg);
 }
+
+
+/* ADAPTIVE */
+
+@media (max-width: 599px) {
+    .products-list-title {
+        padding-top: 30px;
+        text-align: center;
+    }
+    .table-items-shop {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        grid-gap: 36px 27px;
+    }
+    .table-item-card {
+        width: 280px !important;
+        height: 280px !important;
+    }
+}
+
+@media (max-width: 400px) {
+    .pagination {
+        column-gap: 15px;
+    }
+    .page-link div {
+        width: 30px;
+        height: 30px;
+    }
+}

@@ -7,8 +7,8 @@
     <meta name="viewport" content="width-device-width, initial-scale=1.0">
 
     <title>{{ title }}</title>
+    <link rel="stylesheet" href="{% static 'shop/css/styles.css' %}">
     {% block css_styles %}
-    <link type="text/css" href="{% static 'shop/css/styles.css' %}" rel="stylesheet">
     {% endblock %}
 
     <link rel="shortcut icon" href="{% static 'shop/img/jpg/main-icon.png' %}" type="image/x-icon">
@@ -20,42 +20,48 @@
     <div class="wrapper">
         <!-- header start -->
         {% block header %}
-        <header class="header">
-            <div class="header-wrapper header-border">
-                <div class="header-logo">
-                    <a href="{% url 'home' %}" class="header-logo-link">
-                        <h1 class="header-logo-link-title">
-                            SHOPPE
-                        </h1>
-                    </a>
-                </div>
-                <div class="header-menu">
-                    <div class="header-menu-items">
-                        <a href="{% url 'shop' %}" class="header-menu-link-text">
-                            Shop
-                        </a>
-                        <a href="{% url 'about' %}" class="header-menu-link-text">
-                            Our Story
+            <header class="header">
+                <div class="header-wrapper header-border">
+                    <div class="header-logo">
+                        <a href="{% url 'home' %}" class="header-logo-link">
+                            <h1 class="header-logo-link-title">
+                                SHOPPE
+                            </h1>
                         </a>
                     </div>
-                    |
-                    <div class="header-menu-items">
-                        <a href="{% url 'cart' %}" class="header-menu-link-icon">
-                            <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
-                        </a>
-                        {% if request.user.is_authenticated %}
-                            <a href="{% url 'account' %}" class="header-menu-link-icon">
-                                <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                    <div class="header_burger">
+                        <span></span>
+                    </div>
+                    <div class="header-menu">
+                        <div class="header-menu-items">
+                            <a href="{% url 'shop' %}" class="header-menu-link-text">
+                                Shop
                             </a>
-                        {% else %}
-                            <a href="{% url 'login' %}" class="header-menu-link-icon">
-                                <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                            <a href="{% url 'about' %}" class="header-menu-link-text">
+                                Our Story
                             </a>
-                        {% endif %}
+                        </div>
+                        <span>|</span>
+                        <div class="header-menu-items">
+                            <a href="{% url 'cart' %}" class="header-menu-link-icon">
+                                <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
+                                <span class="icon-label">Cart</span>
+                            </a>
+                            {% if request.user.is_authenticated %}
+                                <a href="{% url 'account' %}" class="header-menu-link-icon">
+                                    <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                                    <span class="icon-label">My Account</span>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'login' %}" class="header-menu-link-icon">
+                                    <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                                    <span class="icon-label">My Account</span>
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </header>
+            </header>
         {% endblock %}
 
 
@@ -109,8 +115,10 @@
         </footer>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="{% static 'shop/js/fontAwesome.js' %}"></script>
     {% block js_scripts %}
     {% endblock %}
+    <script src="{% static 'shop/js/headerBurger.js' %}"></script>
 </body>
 </html>
