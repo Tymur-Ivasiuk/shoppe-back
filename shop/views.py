@@ -315,6 +315,7 @@ def create_order(request):
             phone = request.POST.get('phone'),
             email = request.POST.get('email'),
             order_notes = request.POST.get('order_notes'),
+            payment_method = request.POST.get('payment_method'),
 
             sale = sale,
             user = user,
@@ -365,7 +366,7 @@ class OrderView(DetailView):
                 context['can_view'] = True
 
         if self.request.user.is_authenticated:
-            if context['order'].user and self.request.user.id == context['order'].user.id:
+            if context['order'].user and self.request.user.id == context['order'].user.id or self.request.user.is_staff:
                 context['can_view'] = True
 
         return context

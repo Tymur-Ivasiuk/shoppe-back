@@ -174,29 +174,13 @@
                     </div>
 
                     <div class="order-payment">
-                        <label class="custom-radio-btn">
-                            <span class="label">Direct bank transfer</span>
-                            <input type="radio" name="sample" checked>
-                            <span class="checkmark"></span>
-                        </label>
-
-                        <label class="custom-radio-btn">
-                            <span class="label">Check payments</span>
-                            <input type="radio" name="sample">
-                            <span class="checkmark"></span>
-                        </label>
-
-                        <label class="custom-radio-btn">
-                            <span class="label">Cash on delivery</span>
-                            <input type="radio" name="sample">
-                            <span class="checkmark"></span>
-                        </label>
-
-                        <label class="custom-radio-btn">
-                            <span class="label">PayPal </span>
-                            <input type="radio" name="sample">
-                            <span class="checkmark"></span>
-                        </label>
+                        {% for pay in order_form.payment_method %}
+                            <label class="custom-radio-btn">
+                                <span class="label">{{ pay.choice_label }}</span>
+                                {{ pay.tag }}
+                                <span class="checkmark"></span>
+                            </label>
+                        {% endfor %}
                     </div>
 
                     <button type="submit">

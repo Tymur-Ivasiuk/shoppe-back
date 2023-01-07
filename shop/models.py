@@ -45,7 +45,6 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=7, decimal_places=2, validators=[validate_positive])
     quantity = models.PositiveIntegerField()
     sale = models.PositiveSmallIntegerField(default=0)
-    # in_stock = models.BooleanField(default=0)
     description = models.TextField(blank=True)
     category = models.ForeignKey('Category', on_delete=models.PROTECT, default='0')
 

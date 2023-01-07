@@ -68,11 +68,7 @@ function add_to_cart() {
                         $(el).parents('div.cart-item').filter(`[product-id=${id}]`).remove()
                     }
 
-                },
-                error: function() {
-                    console.log('NO')
                 }
-
             })
         })
     })

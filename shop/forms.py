@@ -140,12 +140,23 @@ class OrderForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'class': 'billing_input', 'placeholder': 'Order notes', 'rows': '3'})
     )
 
+    payment_choices = [
+        ('Bank transfer', 'Direct bank transfer'),
+        ('Check payments', 'Check payments'),
+        ('Cash on delivery', 'Cash on delivery'),
+        ('PayPal', 'PayPal'),
+    ]
+    payment_method = forms.CharField(
+        required=True,
+        widget=forms.RadioSelect(choices=payment_choices)
+    )
+
     class Meta:
         model = Order
         fields = (
             'sale', 'first_name', 'last_name',
             'company_name', 'country', 'street', 'postcode',
-            'town', 'phone', 'email', 'order_notes'
+            'town', 'phone', 'email', 'order_notes', 'payment_method',
         )
 
 class ResetPasswordEmail(PasswordResetForm):
