@@ -16,8 +16,10 @@ class AttributeValuesInlines(admin.TabularInline):
 
 class ProductAdmin(SortableAdminBase, admin.ModelAdmin):
     search_fields = ['title', 'sku']
-    list_display = ['title', 'price', 'quantity', 'sku']
-    list_editable = ['price']
+    list_display = ['id', 'image_tag', 'title', 'price', 'quantity', 'sku']
+    list_display_links = ['id', 'image_tag', 'title']
+    list_editable = ['price', 'quantity']
+    list_per_page = 20
 
     inlines = [
         AttributeValuesInlines,
@@ -88,6 +90,13 @@ class CouponAdmin(admin.ModelAdmin):
     list_display = ['code', 'sale_percent', 'max_uses']
     list_editable = ['max_uses']
 
+
+class PreViewPhotoAdmin(admin.ModelAdmin):
+    raw_id_fields = ['product']
+    search_fields = ['product__title']
+    list_display = ['product', 'is_published']
+    list_editable = ['is_published']
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category)
 admin.site.register(Attribute)
@@ -96,3 +105,4 @@ admin.site.register(Order, OrderAdmin)
 
 admin.site.register(Profile)
 admin.site.register(EmailNews)
+admin.site.register(PreViewPhoto, PreViewPhotoAdmin)

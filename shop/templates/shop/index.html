@@ -7,8 +7,79 @@
 {% endblock %}
 
 
+{% block header %}
+<header class="header">
+    <div class="header-wrapper">
+        <div class="header-logo">
+            <a href="{% url 'home' %}" class="header-logo-link">
+                <h1 class="header-logo-link-title">
+                    SHOPPE
+                </h1>
+            </a>
+        </div>
+        <div class="header_burger">
+            <span></span>
+        </div>
+        <div class="header-menu">
+            <div class="header-menu-items">
+                <a href="{% url 'shop' %}" class="header-menu-link-text">
+                    Shop
+                </a>
+                <a href="{% url 'about' %}" class="header-menu-link-text">
+                    Our Story
+                </a>
+            </div>
+            <span>|</span>
+            <div class="header-menu-items">
+                <a href="{% url 'cart' %}" class="header-menu-link-icon">
+                    <img src="{% static 'shop/img/svg/header/icon-shopping.svg' %}" alt="shopping">
+                    <span class="icon-label">Cart</span>
+                </a>
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'account' %}" class="header-menu-link-icon">
+                        <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                        <span class="icon-label">My Account</span>
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="header-menu-link-icon">
+                        <img src="{% static 'shop/img/svg/header/icon-user.svg' %}" alt="user">
+                        <span class="icon-label">My Account</span>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+
 {% block main %}
 <main class="main">
+    {% if pre_view %}
+        <section class="pre-view">
+            <div class="pre-view-slider">
+                {% for i in pre_view %}
+                    <div class="pre-view-item">
+                        <img src="{{ i.photo.url }}" alt="pre-view" class="pre-view-item_pic">
+                        <div class="pre-view-item_info">
+                            <h2 class="pre-view-item_title">
+                                {{ i.product.title }}
+                            </h2>
+                            <p class="pre-view-item_price">
+                                $ {{ i.product.price }}
+                            </p>
+                            <a href="{{ i.get_absolute_url }}" class="pre-view-item_link">
+                                <div class="pre-view-item_link-button">
+                                    View Product
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
     <section class="shop-table">
         <div class="table-header">
             <h2 class="table-header-title">

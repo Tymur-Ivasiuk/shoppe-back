@@ -34,8 +34,9 @@ def minus(number, value):
 
 @register.filter
 def with_sale(number, value):
-    return number * (100 - value) / 100
+    return number * (100 - value) / 100 if value else number
 
 @register.filter
 def sale(number, value):
     return number/100*value
+

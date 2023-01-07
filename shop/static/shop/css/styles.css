@@ -451,7 +451,6 @@ body {
     padding-top: 64px;
 }
 
-
 .main {
     flex: 1 1 auto;
     margin-bottom: 250px;
@@ -553,17 +552,20 @@ body {
 
 
 .pre-view-slider {
-    border-radius: 16px;
     margin-bottom: 64px;
 }
 .pre-view-item {
     position: relative;
     max-height: 646px;
     object-fit: cover;
+    overflow: hidden;
+    border-radius: 16px;
+    display: flex !important;
+    justify-content: center;
 }
 .pre-view-item_pic {
-    width: 100%;
-    height: auto;
+    width: auto;
+    height: 100%;
 }
 .pre-view-item_info {
     position: absolute;
@@ -599,6 +601,7 @@ body {
     border: 2px solid #FFFFFF;
     border-radius: 6px;
     transition: 0.5s ease;
+    text-align: center;
 }
 .pre-view-item_link-button:hover {
     background-color: #000;
@@ -661,8 +664,8 @@ body {
     border-radius: 8px;
     opacity: 1;
     display: block;
-    height: 100% !important;
     width: 100% !important;
+    height: 100% !important;
     transition: 0.5s ease;
     backface-visibility: hidden;
     object-fit: cover;
@@ -738,6 +741,7 @@ body {
 .footer-menu-words:hover, .footer-menu-words:focus, .footer-menu-words:active {
     color:#000;
 }
+
 .footer-form-info {
     max-width: 396px;
     display: flex;
@@ -784,10 +788,6 @@ body {
 
 
 
-
-
-
-
 .flicking {
     padding-bottom: 26px;
     border-bottom: 2px solid #000;
@@ -797,15 +797,12 @@ body {
 
 
 
-
-
-
 /* ERROR STYLES */
 .error {
     text-align: center;
     align-items: center;
     max-width: 436px;
-    margin: 255px auto;
+    margin: 255px auto 0 auto;
 }
 
 .error-title {
@@ -847,6 +844,8 @@ body {
     margin-bottom: 15px;
 }
 
+
+
 /* ADAPTIVE */
 
 .header_burger {
@@ -885,6 +884,7 @@ body {
 .icon-label {
     display: none;
 }
+
 .title-wrap {
     margin: 96px auto 64px auto;
     text-align: center;
@@ -904,6 +904,16 @@ body {
         width: 300px !important;
         height: 310px !important;
     }
+    .pre-view-item {
+        height: 590px !important;
+    }
+    .pre-view-item_title {
+        font-size: 30px;
+    }
+    .pre-view-item_price {
+        font-size: 24px;
+        margin-bottom: 38px;
+    }
 }
 
 @media (max-width: 699px) {
@@ -911,6 +921,19 @@ body {
         display: flex;
         flex-direction: column;
         row-gap: 20px;
+    }
+    .pre-view-item {
+        height: 500px !important;
+    }
+    .pre-view-item_title {
+        font-size: 26px;
+    }
+    .pre-view-item_price {
+        font-size: 20px;
+        margin-bottom: 28px;
+    }
+    .pre-view-item_link-button {
+        padding: 10px 20px;
     }
 }
 
@@ -995,14 +1018,36 @@ body {
         line-height: 26px;
     }
 
+
     .title-wrap {
         margin: 50px auto 40px auto;
+    }
+    .pre-view-item_info {
+        margin-left: 20px;
+    }
+    .pre-view-item {
+        height: 400px  !important;
+    }
+    .pre-view-item_title {
+        font-size: 25px;
+        margin-bottom: 10px;
+    }
+    .pre-view-item_price {
+        font-size: 20px;
+        margin-bottom: 38px;
+    }
+    .pre-view-item_link-button {
+        font-size: 18px;
+        padding: 10px 20px;
     }
 }
 
 @media (max-width: 400px) {
+    .wrapper {
+        padding: 0 10px;
+    }
     .footer-form-field {
-        width: 230px;
+        width: 240px;
         font-weight: 400;
         font-size: 16px;
         line-height: 27px;
@@ -1010,7 +1055,7 @@ body {
     }
     .footer-form-field::placeholder {
         font-weight: 400;
-        font-size: 14px;
+        font-size: 16px;
         line-height: 24px;
         color: #707070;
     }
@@ -1023,6 +1068,25 @@ body {
         line-height: 26px;
     }
 
+    .pre-view-item_info {
+        top: 70%;
+    }
+    .pre-view-item_title {
+        font-size: 20px;
+        line-height: 20px;
+        margin-bottom: 5px;
+    }
+    .pre-view-item_price {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+    .pre-view-item_link-button {
+        font-size: 14px;
+        padding: 5px 10px;
+    }
+
+
+
     .table-items {
         grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
         grid-gap: 56px 37px;
@@ -1031,7 +1095,6 @@ body {
         width: 270px !important;
         height: 290px !important;
     }
-
     .title-wrap {
         margin: 35px auto 25px auto;
     }

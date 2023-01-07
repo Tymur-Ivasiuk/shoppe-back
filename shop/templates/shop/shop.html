@@ -88,6 +88,20 @@
                     {{ form.in_stock }}
                 </div>
 
+                <div class="checkbox">
+                    <span class="checkbox-text">On sale</span>
+                    <label class="switch">
+                        {% if get_items.on_sale == '1' %}
+                            <input type="checkbox" checked>
+                            <span class="checkbox-switch round"></span>
+                        {% else %}
+                            <input type="checkbox">
+                            <span class="checkbox-switch round"></span>
+                        {% endif %}
+                    </label>
+                    {{ form.on_sale }}
+                </div>
+
                 <button type="submit" class="filter-submin-button">Filter</button>
             </div>
         </form>
@@ -104,6 +118,12 @@
                                     {% else %}
                                         <img src="{% static 'shop/img/jpg/nothing-image.jpg' %}" alt="1" class="table-item-pic">
                                     {% endif %}
+
+                                    {% if i.sale %}
+                                        <div class="sale-pic">
+                                            - {{ i.sale }}%
+                                        </div>
+                                    {% endif %}
                                 </a>
                             </div>
                             <a href="#!" class="table-item-link">
@@ -111,9 +131,16 @@
                                     {{ i.title }}
                                 </p>
                             </a>
-                            <p class="table-item-price">
-                                $ {{ i.price }}
-                            </p>
+                            <div class="table-item-row-price">
+                                {% if i.sale %}
+                                    <p class="table-item-price sale">
+                                        $ {{ i.price }}
+                                    </p>
+                                {% endif %}
+                                <p class="table-item-price">
+                                    $ {{ i.price|with_sale:i.sale }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}

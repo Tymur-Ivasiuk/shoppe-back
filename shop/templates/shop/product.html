@@ -66,9 +66,12 @@
                 {{ product.title }}
             </h2>
 
-            <p class="product-info_price">
-                $ {{ product.price }}
-            </p>
+            <div class="product-info_price">
+                <p>$ {{ product.price|with_sale:product.sale }}</p>
+                {% if product.sale %}
+                    <p class="sale">$ {{ product.price }}</p>
+                {% endif %}
+            </div>
 
             <div class="product-info_rate">
 
@@ -96,7 +99,7 @@
                     <div class="product-info_order">
                         <input type="hidden" name="url_from" id="url_from" value="{{request.path}}">
                         <input type="hidden" name="id" id="product_id" value="{{ product.id }}">
-                        <input type="hidden" name="price" id="price" value="{{ product.price }}">
+                        <input type="hidden" name="price" id="price" value="{{ product.price|with_sale:product.sale }}">
                         <div class="product-info_order-amount">
                             <input type="button" value="-" id="button_minus" class="disabled">
                             <input type="number" step="1" min="1" max="{{ product.quantity }}" id="num_count" name="quantity" value="1" title="Qty" readonly="true">

@@ -44,6 +44,7 @@ class Product(models.Model):
     title = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=7, decimal_places=2, validators=[validate_positive])
     quantity = models.PositiveIntegerField()
+    sale = models.PositiveSmallIntegerField(default=0)
     # in_stock = models.BooleanField(default=0)
     description = models.TextField(blank=True)
     category = models.ForeignKey('Category', on_delete=models.PROTECT, default='0')
@@ -64,6 +65,13 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('product_page', kwargs={'product_id': self.id})
+
+    def image_tag(self):
+        d = self.photo_set.first()
+        return d.image_tag() if d else mark_safe('<p>NONE</p>')
+    image_tag.short_description = 'Image'
+
+
 
 @receiver(post_save, sender=Product)
 def send_email_news(sender, instance, created, **kwargs):
@@ -201,3 +209,15 @@ class EmailNews(models.Model):
 
     def __str__(self):
         return self.email
+
+
+class PreViewPhoto(models.Model):
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    photo = models.ImageField(upload_to="img/%Y/%m/%d")
+    is_published = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.product.title
+
+    def get_absolute_url(self):
+        return self.product.get_absolute_url()

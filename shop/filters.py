@@ -39,6 +39,11 @@ class ProductFilter(django_filters.FilterSet):
         lookup_expr='gte',
         widget=forms.NumberInput(attrs={'name': 'in_stock', 'value': '0', 'step': '', 'style': 'display: none;'})
     )
+    on_sale = django_filters.NumberFilter(
+        field_name='sale',
+        lookup_expr='gte',
+        widget=forms.NumberInput(attrs={'name': 'on_sale', 'value': '0', 'step': '', 'style': 'display: none;'})
+    )
 
     class Meta:
         model = Product
