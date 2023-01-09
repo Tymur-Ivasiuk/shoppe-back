@@ -31,7 +31,9 @@ class HomePage(ListView):
         return context
 
     def get_queryset(self):
-        return Product.objects.all().prefetch_related('photo_set').order_by('-time_create')[:6]
+        return Product.objects.filter(is_published=True).prefetch_related(
+            Prefetch('photo_set', queryset=Photo.objects.filter(index=1))
+        ).order_by('-time_create')[:6]
 
 
 class Shop(ListView):

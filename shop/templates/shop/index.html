@@ -1,5 +1,6 @@
 {% extends 'shop/base.html' %}
 {% load static %}
+{% load shop_tags %}
 
 {% block css_styles %}
 <link type="text/css" href="{% static 'shop/css/styles.css' %}" rel="stylesheet">
@@ -95,12 +96,13 @@
             <div class="table-item">
                 <div class="table-item-card">
                     <a href="{{ i.get_absolute_url }}" class="table-item-link">
-                        {% if i.photo_set.all %}
-                            {% for el in i.photo_set.all %}
-                                {% if el.index == 1 %}
-                                    <img src="{{ el.image.url }}" alt="1" class="table-item-pic">
-                                {% endif %}
-                            {% endfor %}
+                        {% if i.photo_set.get %}
+                            <img src="{{ i.photo_set.get.image.url }}" alt="1" class="table-item-pic">
+                            {% if i.sale %}
+                                <div class="sale-pic">
+                                    - {{ i.sale }}%
+                                </div>
+                            {% endif %}
                         {% else %}
                             <img src="{% static 'shop/img/jpg/nothing-image.jpg' %}" alt="1" class="table-item-pic">
                         {% endif %}
@@ -112,9 +114,16 @@
                         {{ i.title }}
                     </p>
                 </a>
-                <p class="table-item-price">
-                    ₴ {{ i.price }}
-                </p>
+                <div class="table-item-row-price">
+                    {% if i.sale %}
+                        <p class="table-item-price sale">
+                            $ {{ i.price }}
+                        </p>
+                    {% endif %}
+                    <p class="table-item-price">
+                        $ {{ i.price|with_sale:i.sale }}
+                    </p>
+                </div>
             </div>
         {% endfor %}
         </div>

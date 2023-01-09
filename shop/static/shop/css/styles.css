@@ -844,7 +844,36 @@ body {
     margin-bottom: 15px;
 }
 
-
+.sale-pic {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    background: #A18A68;
+    border-radius: 4px;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 20px;
+    color: #FFFFFF;
+    padding: 2px 8px;
+}
+.sale {
+    position: relative;
+    color: rgb(255, 0, 0);
+}
+.sale:before {
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 1px;
+    background: rgb(255, 0, 0);
+    top: 50%;
+    transform: translateY(-50%);
+}
+.table-item-row-price {
+    display: flex;
+    flex-direction: row;
+    column-gap: 16px;
+}
 
 /* ADAPTIVE */
 
