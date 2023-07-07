@@ -144,7 +144,7 @@ class RegisterUser(CreateView):
 
 def send_email_verify(host, email, token):
     subject = 'Your accounts need to be verified'
-    message = f'Hi! Paste the link to verify your account \n\n{host}/verify/{token}'
+    message = f'Hi! Paste the link to verify your account \n\n{host}verify/{token}'
     recipient_list = [email]
     EmailThread(subject, message, recipient_list).start()
 
