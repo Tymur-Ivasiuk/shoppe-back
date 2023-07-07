@@ -135,16 +135,16 @@ class RegisterUser(CreateView):
             profile[0].password_token = password_token
             profile[0].save()
 
-            send_email_verify(user.email, auth_token)
+            send_email_verify(request.build_absolute_uri("/"), user.email, auth_token)
             messages.success(request, 'An email has been sent to your email. Please verify your email address')
             return redirect('login')
         else:
             return render(request, self.template_name, {'form': form})
 
 
-def send_email_verify(email, token):
+def send_email_verify(host, email, token):
     subject = 'Your accounts need to be verified'
-    message = f'Hi! Paste the link to verify your account \n\nhttp://127.0.0.1:8000/verify/{token}'
+    message = f'Hi! Paste the link to verify your account \n\n{host}/verify/{token}'
     recipient_list = [email]
     EmailThread(subject, message, recipient_list).start()
 
@@ -233,7 +233,7 @@ class AccountView(TemplateView):
                 profile = Profile.objects.get(user=user)
 
                 auth_token = str(uuid.uuid4())
-                send_email_verify(user.email, auth_token)
+                send_email_verify(request.build_absolute_uri("/"), user.email, auth_token)
                 messages.success(request, 'An email has been sent to your email. Please verify your email address')
 
                 profile.email_verify = False
