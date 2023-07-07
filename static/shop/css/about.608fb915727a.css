@@ -1,0 +1,21 @@
+.about-wrap {
+    max-width: 670px;
+    margin: 0 auto;
+}
+
+.about-title {
+    font-weight: 500;
+    font-size: 33px;
+    line-height: 43px;
+    color: #000000;
+
+    text-align: center;
+    margin-bottom: 39px;
+}
+.about-desc {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 27px;
+    color: #000000;
+    margin-bottom: 39px;
+}

@@ -1,0 +1,222 @@
+.order-wrap {
+    margin-top: 96px;
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 80px;
+    justify-content: center;
+}
+.order-wrap > div {
+    min-width: 380px;
+}
+.order-details {
+    width: 100%;
+    flex: 1;
+}
+.order-title {
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 25px;
+    color: #000000;
+    margin-bottom: 39px;
+}
+.order-summary {
+    width: 100%;
+    flex: 1;
+}
+
+.order-details-wrap {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.order-details-info {
+    flex: 1;
+    width: 100%;
+    margin-right: 15px;
+    min-width: 160px;
+}
+.order-details-info-wrap {
+    margin-bottom: 39px;
+}
+.order-details-info-title {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 27px;
+    color: #000000;
+
+    margin-bottom: 6px;
+}
+.order-details-info-desc {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 27px;
+    color: #707070;
+}
+
+.order-summary-info {
+    padding: 39px 59px;
+    background: #EFEFEF;
+}
+.order-summary-info_header {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 27px;
+    color: #000000;
+    padding-bottom: 18px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid #D8D8D8;
+}
+.order-summary-info_row {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+
+    margin-bottom: 26px;
+
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 27px;
+    color: #707070;
+}
+.order-summary-info_row div:first-of-type {
+    margin-right: 20px;
+}
+.order-summary-info_row:last-of-type {
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid #D8D8D8;
+}
+.order-summary-info_body-row-text {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 27px;
+    color: #707070;
+
+}
+.order-summary-last-items-info_row {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid #D8D8D8;
+}
+
+.order-summary-info_footer-row {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 21px;
+    color: #000000;
+}
+
+
+.messages {
+    height: 63px;
+    margin-bottom: 60px;
+}
+
+.message {
+    margin-bottom: 60px;
+    padding: 20px 40px;
+    background: #EFEFEF;
+    border-top: 2px solid #A18A68;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease;
+}
+.active-msg{
+    opacity: 1;
+    visibility: visible;
+}
+
+
+
+.first-added {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 5px;
+}
+.added-icon-message {
+    margin-right: 16px;
+}
+
+
+/* order-nothing STYLES */
+.order-nothing {
+    text-align: center;
+    align-items: center;
+    max-width: 436px;
+    margin: 210px auto 0 auto;
+}
+
+.order-nothing-title {
+    font-weight: 500;
+    font-size: 33px;
+    line-height: 43px;
+}
+.order-nothing-text {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 26px;
+    color: #707070;
+    margin-bottom: 40px;
+}
+
+.order-nothing-link {
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 21px;
+    color: #000000;
+}
+.order-nothing-link-button {
+    max-width: 190px;
+    padding: 16px 49px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    transition: 0.2s ease;
+    margin: 0 auto;
+}
+.order-nothing-link-button:hover {
+    background-color: #000;
+    color: #ffffff;
+}
+
+
+@media (max-width: 599px) {
+    .order-wrap {
+        margin-top: 0;
+    }
+    .order-wrap > div {
+        min-width: 250px;
+    }
+    .order-details-info-wrap {
+        margin-bottom: 25px;
+    }
+}
+
+@media (max-width: 499px) {
+    .order-summary-info {
+        padding: 25px 30px;
+    }
+    .order-details-info-wrap {
+        margin-bottom: 15px;
+    }
+    .order-details-info-title {
+        font-size: 14px;
+    }
+    .order-details-info-desc {
+        font-size: 14px;
+    }
+}

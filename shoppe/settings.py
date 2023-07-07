@@ -1,5 +1,8 @@
-import os.path
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,9 +15,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-g9!cg+k5!2&98svfo_$^ea)bt--^t0orj_6^c2r$&acz7)np(i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['*']
+# CSRF_TRUSTED_ORIGINS = [
+#     '*',
+# ]
 
 
 # Application definition
@@ -36,6 +42,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -110,9 +117,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_URL = '/shop/static/'
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS= []
+STATICFILES_DIRS = ['/shop/static/']
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -126,10 +135,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-DEFAULT_FROM_EMAIL = "shoppetestemail@gmail.com"
-SERVER_EMAIL = "shoppetestemail@gmail.com"
+DEFAULT_FROM_EMAIL = "bibajohn228@gmail.com"
+SERVER_EMAIL = "bibajohn228@gmail.com"
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'shoppetestemail@gmail.com'
-EMAIL_HOST_PASSWORD = 'nqsqxuaxlgbmcarq'
+EMAIL_HOST_USER = 'bibajohn228@gmail.com'
+EMAIL_HOST_PASSWORD = 'tmgcirikpwflaobc'
 
-ADMINS = [('Shoppe Shoppe', 'shoppetestemail@gmail.com')]
+ADMINS = [('Shoppe Shoppe', 'bibajohn228@gmail.com')]
